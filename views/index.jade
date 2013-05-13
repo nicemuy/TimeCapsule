@@ -11,22 +11,24 @@ block row2col1
         ul.unstyled.inline
             li
                 img(src='/img/capsule-mini.png',alt='capsule-mini').pop
-                #pop0(style='display:none') pop0<br/>test
+                #pop0(style='display:none') pop0&lt;br&gt;test
                 div(title='40%').progress.progress-striped.active
                     div.bar(style='width:40%;')
             li
                 img(src='/img/capsule-mini.png',alt='capsule-mini').pop
-                #pop1(style='display:none') pop1<br/>test
+                #pop1(style='display:none') pop1&lt;br&gt;test
                 div(title='50%').progress.progress-striped.active
                     div.bar(style='width:50%;')
             li
-                img(src='/img/capsule-mini.png',alt='capsule-mini')
+                img(src='/img/capsule-mini.png',alt='capsule-mini').pop
+                #pop2(style='display:none') pop2&lt;br&gt;test
                 div(title='60%').progress.progress-striped.active
                     div.bar(style='width:60%;')
             li
                 img(src='/img/capsule-mini.png',alt='capsule-mini')
-                div(title='100%').progress.progress-striped.active
+                div(title='100%').progress.progress-striped.progress-success.active
                     div.bar(style='width:100%;')
+                a.btn.btn-success(src='#') 찾기
         ul.unstyled.inline
             li
                 img(src='/img/capsule-mini.png',alt='capsule-mini')
@@ -60,33 +62,9 @@ block row2col1row1col1
 block row2col2
     ul.unstyled
         li
-            | Lorem ipsum dolor sit amet
-        li
-            | Consectetur adipiscing elit
-        li
-            | Integer molestie lorem at massa
-        li
-            | Facilisis in pretium nisl aliquet
-        li
-            | Nulla volutpat aliquam velit
-        li
-            | Faucibus porta lacus fringilla vel
-        li
-            | Aenean sit amet erat nunc
-        li
-            | Eget porttitor lorem
-    a#modal-192145.btn(href='#modal-container-192145',role='button',data-toggle='modal') Launch demo modal
-    div#modal-container-192145.modal.hide.fade(role='dialog',aria-labelledby='myModalLabel',aria-hidden='true')
-        div.modal-header
-            button.close(type='button',data-dismiss='modal',aria-hidden='true') ×
-            h3#myModalLabel
-                | Modal header
-        div.modal-body
-            p
-                | One fine body…
-        div.modal-footer
-            button.btn(data-dismiss='modal',aria-hidden='true') Close
-            button.btn.btn-primary Save changes
+            img(src='/img/capsule-mini.png',alt='capsule-mini')
+            div.bury
+                a.btn.btn-mini(src='#') 묻기
     div.pagination.pagination-mini.pagination-centered
         ul
             li

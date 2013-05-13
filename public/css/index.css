@@ -4,10 +4,18 @@
 .item-list ul{
     margin-top: 30px;
     margin-left: 100px;
+    display:inline-block;
 }
 .item-list ul li{
     margin-left: 45px;
     margin-bottom: 80px;
+    float: left;
+}
+ul li{
+    text-align: center;
+}
+.bury{
+    margin-top: 10px;
 }
 .arrow-right img{
     width: 60px;
