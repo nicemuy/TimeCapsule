@@ -3,7 +3,7 @@
 }
 .item-list ul{
     margin-top: 30px;
-    margin-left: 100px;
+    margin-left: 140px;
     display:inline-block;
 }
 .item-list ul li{
@@ -14,12 +14,23 @@
 .text-center{
     text-align: center;
 }
+.vertical-line{
+    float: left;
+    height: 650px;
+    border-left: 1px solid #F3F3F3;
+}
+.bought{
+    border: 1px solid #E9E9E9;
+}
+.bought ul li{
+    margin-bottom: 30px;
+}
 .bury{
     margin-top: 10px;
 }
 .arrow-right img{
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
 }
 .arrow-right{
     position: absolute;
@@ -27,8 +38,8 @@
     right: 0;
 }
 .arrow-left img{
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
 }
 .arrow-left{
     position: absolute;
@@ -39,8 +50,8 @@ img~.progress{
     margin-top: 20px;
 }
 img[src*='logo']{
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
 }
 .logos a:first-child{
     position: relative;
@@ -53,4 +64,7 @@ img[src*='logo']{
 .logos a:nth-child(3){
     position: absolute;
     left: 55%;
+}
+div[data-original-title='100%']{
+    margin-bottom: 10px;
 }
