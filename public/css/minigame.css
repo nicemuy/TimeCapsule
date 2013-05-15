@@ -1,0 +1,22 @@
+.aa{
+		background-image: url('/img/qqqq.png');
+		background-size: 1000px 50px;
+		background-repeat: no-repeat;
+		width: 936px;
+		height: 50px;
+		font-size: 27px;
+		padding-left: 10px;
+		float: left;
+	}
+	
+.cc{
+		width: 50px;
+		height: 50px;
+		float: left;
+	}
+
+#bubbles a {
+			pointer-events:auto;
+			text-decoration:none;
+			color:#fcda5c;
+	}

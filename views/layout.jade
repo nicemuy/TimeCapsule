@@ -43,8 +43,8 @@ html
                                             li.divider-vertical
                                             li.dropdown
                                                 a.dropdown-toggle(data-toggle='dropdown',href='#',style='padding: 5px 15px')
-                                                    img(src='/img/jung.jpg',alt='존나토나옴',style='width:30px;height:30px')
-                                                    |&nbsp;정인철
+                                                    img(src='https://graph.facebook.com/#{session.auth.facebook.user.id}/picture?type=square',alt='존잘',style='width:30px;height:30px')
+                                                    |&nbsp;#{session.auth.facebook.user.name}
                                                 ul.dropdown-menu
                                                     li
                                                         a(href='#') Action

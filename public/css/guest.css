@@ -1,0 +1,14 @@
+.fbButton a{
+    margin: 0;
+    padding: 0;
+}
+
+.comment{
+    font-family: '나눔고딕','Arial';
+    font-size: 40px;
+    font-style: italic;
+    color:#000000;
+    position: absolute;
+    top : 320px;
+    left :400px;
+}
