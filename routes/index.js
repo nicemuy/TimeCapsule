@@ -14,7 +14,8 @@ var connection = mysql.createConnection({
 });
 
 exports.index = function(req, res){
-  connection.query('SELECT * FROM capsule',function(err, results, fields){
+  console.log(req.param.page);
+  connection.query('SELECT * FROM capsule_type NATURAL JOIN capsule WHERE bury_flag = true LIMIT 0,8',function(err, results, fields){
     if(err) throw err;
     res.render('index', { title: 'Express' ,session: req.session ,results: results});
   });

@@ -9,46 +9,41 @@ block js
 block row2col1
     .item-list
         ul.unstyled.inline.text-center
-            li
-                img(src='/img/capsule1.png',alt='capsule1').pop
-                #title0(style='display:none') 2005년 친구들과 청계천에서
-                #pop0(style='display:none') 8GB/365일
-                div(title='40%').progress.progress-striped.active
-                    div.bar(style='width:40%;')
-            li
-                img(src='/img/capsule2.png',alt='capsule2').pop
-                #title1(style='display:none') 우리결혼식날! 1000일 뒤에 보면 색다르겠지
-                #pop1(style='display:none') 20GB/1000일
-                div(title='50%').progress.progress-striped.active
-                    div.bar(style='width:50%;')
-            li
-                img(src='/img/capsule3.png',alt='capsule3').pop
-                #title2(style='display:none') 엽기사진, 200일뒤에 봐라!!
-                #pop2(style='display:none') 40GB/200일
-                div(title='60%').progress.progress-striped.active
-                    div.bar(style='width:60%;')
-            li
-                img(src='/img/capsule4.png',alt='capsule4')
-                div(title='100%').progress.progress-striped.progress-success.active
-                    div.bar(style='width:100%;')
-                a.btn.btn-success.btn-small(href='/minigame', target='_blank') 찾기
+            each item, index in results
+                if index < 4
+                    li
+                        img(src='/img/capsule1.png',alt='capsule1').pop
+                        div(id='title'+index,style='display:none')= item.kind
+                        - var curDate = new Date();
+                        - var startDate = new Date(item.start_date);
+                        - var perc = Math.floor(Math.ceil((curDate.getTime()-startDate.getTime())/(1000*60*60*24))/item.duration*100);
+                        - perc = perc>100?100:perc;
+                        div(id='pop'+index,style='display:none') #{item.size}byte/#{item.duration}일
+                        if perc == 100
+                            div(title='100%').progress.progress-striped.progress-success.active
+                                div.bar(style='width:100%;')
+                                a.btn.btn-success.btn-small(href='/minigame', target='_blank') 찾기
+                        else
+                            div(title='#{perc}%').progress.progress-striped.active
+                                div.bar(style='width:#{perc}%;')
         ul.unstyled.inline.text-center
-            li
-                img(src='/img/capsule5.png',alt='capsule5')
-                div.progress.progress-striped.active
-                    div.bar(style='width:10%;')
-            li
-                img(src='/img/capsule6.png',alt='capsule6')
-                div.progress.progress-striped.active
-                    div.bar(style='width:30%;')
-            li
-                img(src='/img/capsule7.png',alt='capsule7')
-                div.progress.progress-striped.active
-                    div.bar(style='width:20%;')
-            li
-                img(src='/img/capsule8.png',alt='capsule8')
-                div.progress.progress-striped.active
-                    div.bar(style='width:90%;')
+            each item, index in results
+                if index >= 4 && index < 8
+                    li
+                        img(src='/img/capsule1.png',alt='capsule1').pop
+                        div(id='title'+index,style='display:none')= item.kind
+                        - var curDate = new Date();
+                        - var startDate = new Date(item.start_date);
+                        - var perc = Math.floor(Math.ceil((curDate.getTime()-startDate.getTime())/(1000*60*60*24))/item.duration*100);
+                        - perc = perc>100?100:perc;
+                        div(id='pop'+index,style='display:none') #{item.size}byte/#{item.duration}일
+                        if perc == 100
+                            div(title='100%').progress.progress-striped.progress-success.active
+                                div.bar(style='width:100%;')
+                            a.btn.btn-success.btn-small(href='/minigame', target='_blank') 찾기
+                        else
+                            div(title='#{perc}%').progress.progress-striped.active
+                                div.bar(style='width:#{perc}%;')
         a(href='#').arrow-left
             img(src='/img/arrows-left.png',alt='arrows-left')
         a(href='#').arrow-right

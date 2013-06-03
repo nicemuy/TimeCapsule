@@ -55,7 +55,6 @@ app.get('/guest', routes.guest);
 app.get('/', routes.index);
 app.get('/users', user.list);
 app.get('/minigame', routes.minigame);
-app.get('/dbtest', routes.dbtest);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
