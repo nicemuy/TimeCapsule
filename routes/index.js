@@ -6,7 +6,7 @@
 var mysql = require('mysql');
 
 var connection = mysql.createConnection({
-    host:'localhost',
+    host:'54.214.246.103',
     port:3306,
     user:'travler',
     password:'time',
@@ -14,7 +14,10 @@ var connection = mysql.createConnection({
 });
 
 exports.index = function(req, res){
-  res.render('index', { title: 'Express' ,session: req.session});
+  connection.query('SELECT * FROM capsule',function(err, results, fields){
+    if(err) throw err;
+    res.render('index', { title: 'Express' ,session: req.session ,results: results});
+  });
 };
 
 exports.guest = function(req, res){
@@ -26,10 +29,3 @@ exports.minigame = function(req, res){
   //res.render('guest/main', { title: 'GuestMain', layout: 'guestLayout.jade' });
   res.render('minigame');
 };
-
-exports.dbtest = function(req, res){
-    connection.query('SELECT * FROM capsule',function(err, results, fields){
-        if(err) throw err;
-        res.render('dbtest',{duration:results[0].duration});
-    });
-}
