@@ -14,10 +14,12 @@ var connection = mysql.createConnection({
 });
 
 exports.index = function(req, res){
-  console.log(req.param.page);
-  connection.query('SELECT * FROM capsule_type NATURAL JOIN capsule WHERE bury_flag = true LIMIT 0,8',function(err, results, fields){
+  connection.query('SELECT * FROM capsule_type NATURAL JOIN capsule WHERE bury_flag = true LIMIT ?,?',[(req.params.page-1)*8,8],function(err, results, fields){
     if(err) throw err;
-    res.render('index', { title: 'Express' ,session: req.session ,results: results});
+    var pathNum = parseInt(path.substring(1));
+    var previous = pathNum-1?'/'+(pathNum-1):'#';
+    var next = pathNum+1;
+    res.render('index', { title: 'Express' ,session: req.session ,results: results ,path: req.path});
   });
 };
 

@@ -44,6 +44,9 @@ block row2col1
                         else
                             div(title='#{perc}%').progress.progress-striped.active
                                 div.bar(style='width:#{perc}%;')
+        - var pathNum = parseInt(path.substring(1));
+        - var previous = pathNum-1?'/'+(pathNum-1):'#';
+        - var previous = pathNum-1
         a(href='#').arrow-left
             img(src='/img/arrows-left.png',alt='arrows-left')
         a(href='#').arrow-right

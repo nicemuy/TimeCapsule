@@ -23,7 +23,7 @@ everyauth
       return usersByFbId[fbUserMetadata.id] ||
         (usersByFbId[fbUserMetadata.id] = fbUserMetadata);
     })
-    .redirectPath('/');
+    .redirectPath('/1');
 
 everyauth.everymodule
   .findUserById( function (id, callback) {
@@ -52,7 +52,7 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/guest', routes.guest);
-app.get('/', routes.index);
+app.get('/:page', routes.index);
 app.get('/users', user.list);
 app.get('/minigame', routes.minigame);
 
