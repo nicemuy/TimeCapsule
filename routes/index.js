@@ -14,12 +14,11 @@ var connection = mysql.createConnection({
 });
 
 exports.index = function(req, res){
-  connection.query('SELECT * FROM capsule_type NATURAL JOIN capsule WHERE bury_flag = true LIMIT ?,?',[(req.params.page-1)*8,8],function(err, results, fields){
+  connection.query('SELECT * FROM capsule_type NATURAL JOIN capsule WHERE bury_flag = true LIMIT 0,8',function(err, results, fields){
     if(err) throw err;
-    var pathNum = parseInt(path.substring(1));
-    var previous = pathNum-1?'/'+(pathNum-1):'#';
-    var next = pathNum+1;
-    res.render('index', { title: 'Express' ,session: req.session ,results: results ,path: req.path});
+    connection.query('SELECT COUNT(*) as total FROM capsule WHERE bury_flag = true',function(err, results2, fields){
+        res.render('index', { title: 'Express' ,session: req.session ,results: results ,previous: '#' ,next: '#'});
+    });
   });
 };
 
@@ -31,4 +30,16 @@ exports.guest = function(req, res){
 exports.minigame = function(req, res){
   //res.render('guest/main', { title: 'GuestMain', layout: 'guestLayout.jade' });
   res.render('minigame');
+};
+
+exports.indexPaging = function(req, res){
+    connection.query('SELECT * FROM capsule_type NATURAL JOIN capsule WHERE bury_flag = true LIMIT ?,?',[(req.params.page-1)*8,8],function(err, results, fields){
+        if(err) throw err;
+        connection.query('SELECT COUNT(*) as total FROM capsule WHERE bury_flag = true',function(err, results2, fields){
+            var pathNum = parseInt(req.path.substring(1));
+            var previous = pathNum-1?'/'+(pathNum-1):'#';
+            var next = pathNum == Math.ceil(results2[0].total/8)?'#':'/'+(pathNum+1);
+            res.json({results: results ,previous: previous ,next: next});
+        });
+    });
 };
