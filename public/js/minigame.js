@@ -1,33 +1,53 @@
-
-	var direction = 0;
 	var temp = 0;
-	var rx;
-	var ry;
-	var state = 1;
-	var arr = new Array(200);
-	var arr2 = new Array(10);
-	var count= 0;
-	var hitpoint = 0;
-	var clength = 0;
-	var hold = true;
-	var dx;
-	var dy;
-	var h = -1;
-	var time =0;
-	var sPlayer = new Player();
-	sPlayer.init();
-	
-	for (var i = 0; i < 10; i++) {
-		for(var j = 0; j <20 ; j++){
-			arr[count] = Math.round(Math.random()*100)%2;
-			count++;
-		}
-	}
 
-	for(var i = 0; i < 4; i++){
-		arr[(Math.round(Math.random()*10000)%50)+5] = 6;
-	}
-	arr[13] = 6;
+	var sPlayer = new Player();
+	var sMap = new Map();
+	var sChat = new Chat();
+	var splayerList = new Array();
+
+
+	var socket = io.connect('http://localhost:3000/');
+
+	sPlayer.init();
+	sMap.init();
+	//splayerList.init();
+
+	socket.on('init', function (data) {
+    	sMap.set_Arr(data.map);
+ 		socket.emit('hello', { object : sPlayer.name });
+  	});
+
+  	socket.on('welcome', function (data){
+  		alert("data.p_name = "+data.object );
+  		splayerList.push(sPlayer);
+  		alert("qqqq = "+splayerList.toString());
+  		alert("name = "+splayerList[0].name);
+  		//alert("wwww ");
+  	});
+
+	socket.on('move_react', function (data) {
+    	console.log(data.direction,data.state);
+    	sPlayer.set_direction(data.direction);
+        sPlayer.set_state(data.state);
+  	});
+
+	socket.on('attack_react', function (data) {
+    	console.log(data.direction,data.state);
+    	sPlayer.set_direction(data.direction);
+        sPlayer.set_state(data.state);
+  	});
+
+  	socket.on('chat_react', function (data) {
+    	console.log(data.clength,data.message);
+        sPlayer.set_clength(data.clength);
+        sPlayer.set_message(data.message);
+
+  	});
+
+  	socket.on('hit_react', function (data) {
+    	console.log(data.c_map);
+        sMap.set_Arr(data.c_map);
+  	});
 
 	window.addEventListener('load',eventWindowLoaded,false);
 	window.addEventListener('keydown', moveKey, true);
@@ -43,29 +63,26 @@
 
             // Left arrow.
         	case 37:
-          		//alert("left");
-          		direction = 4;
-          		state = 1;
+
+          		socket.emit('move', { p_name: sPlayer.name, p_state: 'Left' });
         		break;
 
             // Right arrow.
         	case 39:
-       
-          		direction = 1;
-          		state = 1;
+
+          		socket.emit('move', { p_name: sPlayer.name, p_state: 'Right' });
           		break;
 
             // Down arrow
         	case 40:
-          		
-          		direction = 2;
-          		state = 1;
+
+          		socket.emit('move', { p_name: sPlayer.name, p_state: 'Down' });
           		break;
 
             // Up arrow 
         	case 38:
-          		direction = 3;
-          		state = 1;
+
+          		socket.emit('move', { p_name: sPlayer.name, p_state: 'Up' });
         		break;
 
       	}
@@ -77,26 +94,26 @@
 
         	// r-hit
         	case 65:
-        		direction =5;
-        		state = 1;
+
+          		socket.emit('attack', { p_name: sPlayer.name, p_state: 'Right_hit' });
         		break;
 
         	// d-hit
         	case 83:
-        		direction =6;
-        		state = 1;
+
+          		socket.emit('attack', { p_name: sPlayer.name, p_state: 'Down_hit' });
         		break;
 
         	// u-hit
         	case 68:
-        		direction =7;
-        		state = 1;
+
+          		socket.emit('attack', { p_name: sPlayer.name, p_state: 'Up_hit' });
         		break;
 
         	// l-hit
         	case 70:
-        		direction =8;
-        		state = 1;
+        	
+          		socket.emit('attack', { p_name: sPlayer.name, p_state: 'Left_hit' });
         		break;
 		}
     }
@@ -110,169 +127,56 @@
 			return;
 		}else{
 			var theCanvas = document.getElementById("canvas");
-			var message = "";
-			var fillOrStroke = "fill";
 			var context = theCanvas.getContext("2d");
-			dx=0;
-			dy=0;
-
-		}
-
-		var formElement = document.getElementById("textBox");
-		formElement.addEventListener("keyup",textBoxChanged,false);
-
-		function textBoxChanged(e){
-
-			if (e.keyCode == 13) {
-				
-				clength=$("#textBox").val().length;
-
-				time = 0;
-
-				var target = e.target;
-				message = target.value;
-				$("#textBox").val("");
-
-				sPlayer.set_clength(clength);
-				sPlayer.set_message(message);
-
-				sPlayer.chat(context,clength);
-				hold = true;
-			}
-			else{
-				hold = false;
-			}
-
+			sChat.init(context);
+			sPlayer.set_context(context);
+			var formElement = document.getElementById("textBox");
+			formElement.addEventListener("keyup",sChat.textBox,false);
 		}
 
 		startUp();
 
-		var titleSheet = new Image();
-		var hero = new Image();
-		var box = new Image();
-		var spark = new Image();
-		var chat = new Image();
-		var border = new Image();
-
-		titleSheet.src="/img/tilesheet.png";
-		hero.src="/img/ogre.png";
-		box.src="/img/chest.png";
-		spark.src="/img/sparks.png";
-		chat.src="/img/barsheet.png";
-		border.src="/img/border.png";
-
-		drawScreen();
-
-		function drawScreen() {
-			context.fillStyle = '#aaaaaa';
-			context.fillRect(0,0,1000,600);
-		}
-
-		function drawtext(){
-			context.font ="50px serif";
-			context.fillStyle = '#FF0000';
-			context.fillText (message,xPosition,yPosition);
-		}
-
-		function drawhero() {
-
-			var metrics = context.measureText(message);
-			var textWidth = metrics.width;
-			var xPosition = dx;
-			var yPosition = dy;
+		function all_draw() {
 			
-			if(-100 <= dx && dx <= 900 && -100 <= dy && dy <= 600){
-				
-				count=0;
-				for (var i = 0; i < 6; i++) {
-					for(var j = 0; j <10 ; j++){
-						context.drawImage(titleSheet,16*13+16*arr[count],16*7,16,16,100*j,100*i,100,100);
-						if(arr[count] == 4){
-							context.drawImage(box,0,0,48,48,100*j+25,100*i+25,50,50);
-							context.drawImage(spark,48*(temp%6),0,32,48,100*j+25,100*i+25,50,50);
-						}
-						count++;
-					}
-				}
+			if(-100 <= sPlayer.get_xpos() && sPlayer.get_xpos() <= 900 && -100 <= sPlayer.get_ypos() && sPlayer.get_ypos() <= 600){
 
-				sPlayer.chat(context,message,clength,time);
+				sMap.draw(context,temp);
+		
+				sPlayer.chat();
 
-				if(state != 0){
-					if(direction == 0){ //stop
+				if(sPlayer.get_state() != 0){
+					if(sPlayer.get_direction() == 0){ //stop
 
-						context.drawImage(hero,48*(temp%2),48*8,48,48,dx,dy,100,100);
-						temp++;
+						temp = sPlayer.stay(temp);
 
-					}else if(direction == 1 ){ //right
+					}else if(sPlayer.get_direction() >= 1 && sPlayer.get_direction() <= 4){ //right
 
-						arr2= sPlayer.move(arr,direction,temp,context);
-
-						
-						temp = arr2[0];
-						state =0;
-
-					}else if(direction == 2 ){ //down
-						
-						arr2= sPlayer.move(arr,direction,temp,context);
+						arr2= sPlayer.move(sMap.get_Arr(),temp);
 
 						temp = arr2[0];
-						state =0;
-
-					}else if(direction == 3 ){ //up
-						
-						arr2= sPlayer.move(arr,direction,temp,context);
-						state =0;
-
-					}else if(direction == 4 ){ //left
+						sPlayer.set_state(0);
 					
+					}else if(sPlayer.get_direction() >= 5 && sPlayer.get_direction() <= 8 && sPlayer.get_hold() != true){ //r-attack
 
-						arr2= sPlayer.move(arr,direction,temp,context);
-
-						temp = arr2[0];
-						state =0;
-					
-					}else if(direction == 5 && hold == true){ //r-attack
-
-						arr2= sPlayer.attack(arr,direction,temp,context,hold);
+						arr2= sPlayer.attack(sMap.get_Arr(),temp);
 
 						temp = arr2[0];
 
-					}else if(direction == 6 && hold == true){ //d-attack
-
-						arr2= sPlayer.attack(arr,direction,temp,context,hold);
-
-						temp = arr2[0];
-
-					}else if(direction == 7 && hold == true){ //u-attack
-
-						arr2= sPlayer.attack(arr,direction,temp,context,hold);
-
-						temp = arr2[0];
-
-					}else if(direction == 8 && hold == true){ //l-attack
-
-						arr2= sPlayer.attack(arr,direction,temp,context,hold);
-
-						temp = arr2[0];
 					}else{
-						direction = 2;
-						state = 0;
+						sPlayer.set_direction(2);
+						sPlayer.set_state(0);
 					}
-			} else{
-					temp = sPlayer.stay(direction,context,temp);
+				} else{
+					temp = sPlayer.stay(temp);
 				}
 			}else{
 
-				arr2= sPlayer.reset();
-				direction = 0;
-				state=1;	
+				sPlayer.reset();
 			}
-				
 		}
+	
 
-
-		function startUp(){
-			setInterval(drawhero,70);
-		}
-
+	function startUp(){
+		setInterval(all_draw,100);
 	}
+}
