@@ -9,47 +9,10 @@ block js
 block row2col1
     .item-list
         ul.unstyled.inline.text-center
-            each item, index in results
-                if index < 4
-                    li
-                        img(src='/img/capsule1.png',alt='capsule1').pop
-                        div(id='title'+index,style='display:none')= item.kind
-                        - var curDate = new Date();
-                        - var startDate = new Date(item.start_date);
-                        - var perc = Math.floor(Math.ceil((curDate.getTime()-startDate.getTime())/(1000*60*60*24))/item.duration*100);
-                        - perc = perc>100?100:perc;
-                        div(id='pop'+index,style='display:none') #{item.size}byte/#{item.duration}일
-                        if perc == 100
-                            div(title='100%').progress.progress-striped.progress-success.active
-                                div.bar(style='width:100%;')
-                            a.btn.btn-success.btn-small(href='/minigame', target='_blank') 찾기
-                        else
-                            div(title='#{perc}%').progress.progress-striped.active
-                                div.bar(style='width:#{perc}%;')
         ul.unstyled.inline.text-center
-            each item, index in results
-                if index >= 4 && index < 8
-                    li
-                        img(src='/img/capsule1.png',alt='capsule1').pop
-                        div(id='title'+index,style='display:none')= item.kind
-                        - var curDate = new Date();
-                        - var startDate = new Date(item.start_date);
-                        - var perc = Math.floor(Math.ceil((curDate.getTime()-startDate.getTime())/(1000*60*60*24))/item.duration*100);
-                        - perc = perc>100?100:perc;
-                        div(id='pop'+index,style='display:none') #{item.size}byte/#{item.duration}일
-                        if perc == 100
-                            div(title='100%').progress.progress-striped.progress-success.active
-                                div.bar(style='width:100%;')
-                            if item.open_flag
-                                a.btn.btn-info.btn-small(href='/minigame', target='_blank') 열기
-                            else
-                                a.btn.btn-success.btn-small(href='/minigame', target='_blank') 찾기
-                        else
-                            div(title='#{perc}%').progress.progress-striped.active
-                                div.bar(style='width:#{perc}%;')
-        a(href=previous).arrow-left
+        a.arrow-left
             img(src='/img/arrows-left.png',alt='arrows-left')
-        a(href=next).arrow-right
+        a.arrow-right
             img(src='/img/arrows-right.png',alt='arrows-right')
 block row2col1row1col1
     .item-list.logos
@@ -63,35 +26,5 @@ block row2col1row1col1
 block row2col2
     .bought
         ul.unstyled.text-center
-            li
-                img(src='/img/capsule9.png',alt='capsule9')
-                div.bury
-                    a.btn.btn-mini(src='#') 묻기
-            li
-                img(src='/img/capsule10.png',alt='capsule10')
-                div.bury
-                    a.btn.btn-mini(src='#') 묻기
-            li
-                img(src='/img/capsule1.png',alt='capsule1')
-                div.bury
-                    a.btn.btn-mini(src='#') 묻기
-            li
-                img(src='/img/capsule2.png',alt='capsule2')
-                div.bury
-                    a.btn.btn-mini(src='#') 묻기
         div.pagination.pagination-mini.pagination-centered
             ul
-                li
-                    a(href='#') Prev
-                li.active
-                    a(href='#') 1
-                li
-                    a(href='#') 2
-                li
-                    a(href='#') 3
-                li
-                    a(href='#') 4
-                li
-                    a(href='#') 5
-                li
-                    a(href='#') Next
