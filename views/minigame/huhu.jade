@@ -1,0 +1,21 @@
+!!! 5
+html(lang='ko')
+	head
+		meta(charset='UTF-8')
+		title hehe~
+		link(rel='stylesheet', type='text/css', href='/css/minigame.css')
+		script(src='/js/modernizr-1.6.min.js')
+		script(src='/js/player.js')
+		script(src='/js/map.js')
+		script(src='/js/chat.js')
+		script(src='/js/playerlist.js')
+		script(type='text/javascript', src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js')
+		script(type='text/javascript', src='/socket.io/socket.io.js')
+		script(type='text/javascript', src='/js/minigame.js')
+	body
+		div(style='position: absolute; top: 24%; left: 24%; margin-top: -120px; width: 1000px; height: 700px;')
+			canvas#canvas(width='1000', height='600')
+				| Your browser does not support HTML5 Canvas.
+			form(onsubmit='return false;')
+				input#textBox.aa(type='text', name='player-name', placeholder='글을 입력하시오.')
+				img#bb.cc(src='/img/wwww.png')
