@@ -1,0 +1,19 @@
+extends ../layout
+
+block css
+    link(href='/css/index.css',rel='stylesheet')
+
+block js
+    script(type='text/javascript',src='/js/purchase.js')
+    script
+        if (window.location.hash == '#_=_')
+            window.location.hash = '';
+
+block row2col1
+    .item-list
+        ul.unstyled.inline.text-center
+        ul.unstyled.inline.text-center
+        a.arrow-left
+            img(src='/img/arrows-left.png',alt='arrows-left')
+        a.arrow-right
+            img(src='/img/arrows-right.png',alt='arrows-right')

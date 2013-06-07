@@ -22,6 +22,10 @@ exports.index = function(req, res){
         res.render('index', { title: 'Express' ,session: req.session});
 };
 
+exports.purchase = function(req, res){
+    res.render('purchase/index');
+}
+
 exports.guest = function(req, res){
   //res.render('guest/main', { title: 'GuestMain', layout: 'guestLayout.jade' });
   res.render('guest/main', { title: 'GuestMain'});

@@ -3,6 +3,14 @@
  * Module dependencies.
  */
 
+function requireLogin(req, res, next) {
+    if (req.session.auth != undefined?req.session.auth.loggedIn:false) {
+        next();
+    } else {
+        res.redirect("/guest");
+    }
+}
+
 var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
@@ -63,12 +71,19 @@ if ('development' == app.get('env')) {
 }
 
 app.get('/guest', routes.guest);
+app.all('/', requireLogin);
 app.get('/', routes.index);
+app.all('/purchase', requireLogin);
+app.get('/purchase', routes.purchase);
+app.all('/show', requireLogin);
 app.get('/show', routes.show);
+app.all('/users', requireLogin);
 app.get('/users', user.list);
+app.all('/minigame', requireLogin);
 app.get('/minigame', routes.minigame);
 app.get('/indexPaging/:page', routes.indexPaging);
 app.get('/orderPaging/:page', routes.orderPaging);
+app.all('/buryView', requireLogin);
 app.get('/buryView', routes.buryView);
 app.post('/upload', routes.upload);
 

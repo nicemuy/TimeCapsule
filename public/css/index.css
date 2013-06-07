@@ -19,12 +19,6 @@
     height: 650px;
     border-left: 1px solid #F3F3F3;
 }
-.bought{
-    border: 1px solid #E9E9E9;
-}
-.bought ul li{
-    margin-bottom: 30px;
-}
 .bury{
     margin-top: 10px;
 }
@@ -48,22 +42,6 @@
 }
 img~.progress{
     margin-top: 20px;
-}
-img[src*='logo']{
-    width: 60px;
-    height: 60px;
-}
-.logos a:first-child{
-    position: relative;
-    left: 45%;
-}
-.logos a:nth-child(2){
-    position: absolute;
-    left: 50%;
-}
-.logos a:nth-child(3){
-    position: absolute;
-    left: 55%;
 }
 div[data-original-title='100%']{
     margin-bottom: 10px;
