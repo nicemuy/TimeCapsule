@@ -1,0 +1,83 @@
+extends layout
+
+block css
+    link(href='/css/show.css',rel='stylesheet')
+
+block js
+    script(type='text/javascript',src='/js/index.js')
+
+block row2col1
+    .show-list
+        ul.unstyled.inline.text-center
+                li
+                    a.btn#content(href='#friendModal',role='button', data-toggle='modal')
+                        div.frame
+                            img(src='/img/picture.png',alt='picture').pop
+                    div.text 영학's 첫경험
+                li
+                    a.btn#content(href='#friendModal',role='button', data-toggle='modal')
+                        div.frame
+                            img(src='/img/movie.png',alt='movie').pop
+                    div.text 영학's 첫키스
+                li
+                    a.btn#content(href='#friendModal',role='button', data-toggle='modal')
+                        div.frame
+                            img(src='/img/picture.png',alt='picture').pop
+                    div.text 영학's 첫사랑
+                li
+                    a.btn#content(href='#friendModal',role='button', data-toggle='modal')
+                        div.frame
+                            img(src='/img/movie.png',alt='movie').pop
+                    div.text 영학's 첫여행                 
+        ul.unstyled.inline.text-center
+                li
+                    a.btn#content(href='#friendModal',role='button', data-toggle='modal')
+                        div.frame
+                            img(src='/img/picture.png',alt='picture').pop
+                    div.text 영학's 첫경험
+                li
+                    a.btn#content(href='#friendModal',role='button', data-toggle='modal')
+                        div.frame
+                            img(src='/img/movie.png',alt='movie').pop
+                    div.text 영학's 첫키스
+                li
+                    a.btn#content(href='#friendModal',role='button', data-toggle='modal')
+                        div.frame
+                            img(src='/img/text.png',alt='text').pop
+                    div.text 영학's 첫사랑
+                li
+                    a.btn#content(href='#friendModal',role='button', data-toggle='modal')
+                        div.frame
+                            img(src='/img/text.png',alt='text').pop
+                    div.text 영학's 첫경험
+                        
+        a.arrow-left
+            img(src='/img/arrows-left.png',alt='arrows-left')
+        a.arrow-right
+            img(src='/img/arrows-right.png',alt='arrows-right')
+block row2col1row1col1
+    .show-list.logos
+        a(href='#')
+            img(src='/img/facebook-logo.png',alt='facebook')
+        a(href='#')
+            img(src='/img/twitter-logo.png',alt='twitter')
+        a(href='#')
+            img(src='/img/google-logo.png',alt='google')
+
+block row2col2
+    .bought
+        ul.unstyled.text-center
+        div.pagination.pagination-mini.pagination-centered
+            ul
+
+    #friendModal.modal.hide.fade(tabindex='-1', role='dialog', aria-labelledby='friendModalLabel', aria-hidden='true')
+        .modal-header
+            button.close(type='button',data-dismiss='modal', aria-hidden='true') x
+            h3#friendModalLabel Content's View
+            .modal-body
+                video(width ='320', height='240', controls='controls', id='theVideo')
+                    source(src='/video/movie.mp4', type='video/mp4')
+
+            .modal-footer
+                button.btn(data-dismiss='modal', aria-hidden='true') Close
+                button.btn.btn-primary(data-dismiss='modal', aria-hidden='true') Save changes

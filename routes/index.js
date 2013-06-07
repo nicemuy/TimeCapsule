@@ -4,6 +4,7 @@
  */
 
 var mysql = require('mysql');
+var url = require("url");
 
 var connection = mysql.createConnection({
     host:'54.214.246.103',
@@ -22,9 +23,16 @@ exports.guest = function(req, res){
   res.render('guest/main', { title: 'GuestMain'});
 };
 
+exports.show = function(req, res){
+  //res.render('guest/main', { title: 'GuestMain', layout: 'guestLayout.jade' });
+  res.render('show', { title: 'show'});
+};
+
 exports.minigame = function(req, res){
   //res.render('guest/main', { title: 'GuestMain', layout: 'guestLayout.jade' });
-  res.render('minigame');
+  var queryData = url.parse(req.url, true).query;
+  console.log(queryData.tId +"<------------------url");
+  res.render('minigame/huhu',{data:queryData.tId});
 };
 
 exports.indexPaging = function(req, res){

@@ -36,7 +36,6 @@
     position: absolute;
     top: 40%;
     right: 0;
-    cursor: pointer;
 }
 .arrow-left img{
     width: 80px;
@@ -46,7 +45,6 @@
     position: absolute;
     top: 40%;
     left: 0;
-    cursor: pointer;
 }
 img~.progress{
     margin-top: 20px;
@@ -57,15 +55,15 @@ img[src*='logo']{
 }
 .logos a:first-child{
     position: relative;
-    left: 40%;
+    left: 45%;
 }
 .logos a:nth-child(2){
     position: absolute;
-    left: 45%;
+    left: 50%;
 }
 .logos a:nth-child(3){
     position: absolute;
-    left: 50%;
+    left: 55%;
 }
 div[data-original-title='100%']{
     margin-bottom: 10px;

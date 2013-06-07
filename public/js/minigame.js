@@ -1,6 +1,7 @@
 	var temp = 0;
-
+	var flag = true;
 	var sPlayer = new Player();
+	var hPlayer = new Player();
 	var sMap = new Map();
 	var sChat = new Chat();
 	var splayerList = new Array();
@@ -8,46 +9,9 @@
 
 	var socket = io.connect('http://localhost:3000/');
 
-	sPlayer.init();
+	sPlayer.init(name);
 	sMap.init();
-	//splayerList.init();
-
-	socket.on('init', function (data) {
-    	sMap.set_Arr(data.map);
- 		socket.emit('hello', { object : sPlayer.name });
-  	});
-
-  	socket.on('welcome', function (data){
-  		alert("data.p_name = "+data.object );
-  		splayerList.push(sPlayer);
-  		alert("qqqq = "+splayerList.toString());
-  		alert("name = "+splayerList[0].name);
-  		//alert("wwww ");
-  	});
-
-	socket.on('move_react', function (data) {
-    	console.log(data.direction,data.state);
-    	sPlayer.set_direction(data.direction);
-        sPlayer.set_state(data.state);
-  	});
-
-	socket.on('attack_react', function (data) {
-    	console.log(data.direction,data.state);
-    	sPlayer.set_direction(data.direction);
-        sPlayer.set_state(data.state);
-  	});
-
-  	socket.on('chat_react', function (data) {
-    	console.log(data.clength,data.message);
-        sPlayer.set_clength(data.clength);
-        sPlayer.set_message(data.message);
-
-  	});
-
-  	socket.on('hit_react', function (data) {
-    	console.log(data.c_map);
-        sMap.set_Arr(data.c_map);
-  	});
+	splayerList.push(sPlayer);
 
 	window.addEventListener('load',eventWindowLoaded,false);
 	window.addEventListener('keydown', moveKey, true);
@@ -63,26 +27,25 @@
 
             // Left arrow.
         	case 37:
-
-          		socket.emit('move', { p_name: sPlayer.name, p_state: 'Left' });
+          		socket.emit('move', { p_name: sPlayer.name, p_state: 'Left', p_xpos: sPlayer.get_sxpos()-1, p_ypos: sPlayer.get_sypos() });
         		break;
 
             // Right arrow.
         	case 39:
 
-          		socket.emit('move', { p_name: sPlayer.name, p_state: 'Right' });
+          		socket.emit('move', { p_name: sPlayer.name, p_state: 'Right', p_xpos: sPlayer.get_sxpos()+1, p_ypos: sPlayer.get_sypos() });
           		break;
 
             // Down arrow
         	case 40:
 
-          		socket.emit('move', { p_name: sPlayer.name, p_state: 'Down' });
+          		socket.emit('move', { p_name: sPlayer.name, p_state: 'Down', p_xpos: sPlayer.get_sxpos(), p_ypos: sPlayer.get_sypos()+1 });
           		break;
 
             // Up arrow 
         	case 38:
 
-          		socket.emit('move', { p_name: sPlayer.name, p_state: 'Up' });
+          		socket.emit('move', { p_name: sPlayer.name, p_state: 'Up', p_xpos: sPlayer.get_sxpos(), p_ypos: sPlayer.get_sypos()-1 });
         		break;
 
       	}
@@ -126,57 +89,150 @@
 		if(!canvasSupport()){
 			return;
 		}else{
-			var theCanvas = document.getElementById("canvas");
+			
+      var theCanvas = document.getElementById("canvas");
 			var context = theCanvas.getContext("2d");
 			sChat.init(context);
 			sPlayer.set_context(context);
 			var formElement = document.getElementById("textBox");
 			formElement.addEventListener("keyup",sChat.textBox,false);
+
 		}
+
+		socket.on('welcome', function (data){
+  		
+      var hPlayer = new Player();
+  		hPlayer.init(data.name);
+  		hPlayer.set_context(context);
+  		splayerList.push(hPlayer);
+    });
+
+  	socket.on('move_react', function (data) {
+    	
+      for(var i=0; i < splayerList.length && flag; i++){
+    		if(splayerList[i].name == data.p_name){
+  		  	splayerList[i].set_direction(data.direction);
+       		splayerList[i].set_state(data.state);
+       		i = splayerList.length;
+       		flag = false;
+  		  }
+  	  }
+
+		  if(flag){
+ 		 	  var hPlayer = new Player();
+ 			  hPlayer.init(data.p_name);
+ 			  hPlayer.set_context(context);
+ 		    hPlayer.set_sxpos(data.p_xpos);
+ 			  hPlayer.set_sypos(data.p_ypos);
+ 			  splayerList.push(hPlayer);
+ 			  flag = true;
+ 		   }
+
+ 		 flag = true;
+	  });
+
+    socket.on('init', function (data) {
+      sMap.set_Arr(data.map);
+      socket.emit('hello', { object : test });
+    });
+
+
+    socket.on('attack_react', function (data) {
+      for(var i=0; i < splayerList.length && flag; i++){
+        if(splayerList[i].name == data.p_name){
+          splayerList[i].set_direction(data.direction);
+          splayerList[i].set_state(data.state);
+          i = splayerList.length;
+          flag = false;
+        }
+      }
+
+      if(flag){
+       var hPlayer = new Player();
+       hPlayer.init(data.p_name);
+       hPlayer.set_context(context);
+       hPlayer.set_sxpos(data.p_xpos);
+       hPlayer.set_sypos(data.p_ypos);
+       splayerList.push(hPlayer);
+       flag = true;
+      }
+
+      flag = true;
+    });
+
+    socket.on('chat_react', function (data) {
+      for(var i=0; i < splayerList.length && flag; i++){
+       if(splayerList[i].name == data.p_name){
+         splayerList[i].set_clength(data.clength);
+         splayerList[i].set_message(data.message);
+         i = splayerList.length;
+         flag = false;
+        }
+      }
+
+      if(flag){
+        var hPlayer = new Player();
+        hPlayer.init(data.p_name);
+        hPlayer.set_context(context);
+        hPlayer.set_sxpos(data.p_xpos);
+        hPlayer.set_sypos(data.p_ypos);
+        splayerList.push(hPlayer);
+        flag = true;
+      }
+ 
+      flag = true;
+    });
+
+    socket.on('hit_react', function (data) {
+      console.log(data.c_map);
+      sMap.set_Arr(data.c_map);
+    });
 
 		startUp();
 
 		function all_draw() {
-			
-			if(-100 <= sPlayer.get_xpos() && sPlayer.get_xpos() <= 900 && -100 <= sPlayer.get_ypos() && sPlayer.get_ypos() <= 600){
 
 				sMap.draw(context,temp);
-		
-				sPlayer.chat();
+			
+				for(var i = 0; i < splayerList.length; i++){
+					
+					hPlayer = splayerList[i];
 
-				if(sPlayer.get_state() != 0){
-					if(sPlayer.get_direction() == 0){ //stop
+					hPlayer.chat();
 
-						temp = sPlayer.stay(temp);
+				if(hPlayer.get_state() != 0){
+					if(hPlayer.get_direction() == 0){ //stop
 
-					}else if(sPlayer.get_direction() >= 1 && sPlayer.get_direction() <= 4){ //right
+						temp = hPlayer.stay(temp);
 
-						arr2= sPlayer.move(sMap.get_Arr(),temp);
+					}else if(hPlayer.get_direction() >= 1 && hPlayer.get_direction() <= 4){ //right
+
+						arr2= hPlayer.move(sMap.get_Arr(),temp);
 
 						temp = arr2[0];
-						sPlayer.set_state(0);
+						hPlayer.set_state(0);
 					
-					}else if(sPlayer.get_direction() >= 5 && sPlayer.get_direction() <= 8 && sPlayer.get_hold() != true){ //r-attack
+					}else if(hPlayer.get_direction() >= 5 && hPlayer.get_direction() <= 8 && hPlayer.get_hold() != true){ //attack
 
-						arr2= sPlayer.attack(sMap.get_Arr(),temp);
+						arr2= hPlayer.attack(sMap.get_Arr(),temp);
 
 						temp = arr2[0];
 
 					}else{
-						sPlayer.set_direction(2);
-						sPlayer.set_state(0);
+						hPlayer.set_direction(2);
+            hPlayer.set_state(0);
+						temp = hPlayer.stay(temp);
+
 					}
 				} else{
-					temp = sPlayer.stay(temp);
+					temp = hPlayer.stay(temp);
 				}
-			}else{
-
-				sPlayer.reset();
 			}
+			
 		}
-	
 
-	function startUp(){
-		setInterval(all_draw,100);
-	}
+		function startUp(){
+			setInterval(all_draw,90);
+		}
+
 }

@@ -3,8 +3,11 @@ exports.Map = {
 
 	init : function(){
 		
-		this.arr = new Array(200);
+		this.arr = new Array(201);
 		this.count = 0;
+		this.t_arr = new Array();
+		this.t_count = 0;
+		this.capsule = 0;
 
 		for (var i = 0; i < 10; i++) {
 			for(var j = 0; j <20 ; j++){
@@ -16,7 +19,27 @@ exports.Map = {
 		for(var i = 0; i < 4; i++){
 			this.arr[(Math.round(Math.random()*10000)%50)+5] = 6;
 		}
+
 		this.arr[22] = 6;
+
+		this.count = 0;
+
+		for (var i = 0; i < 10; i++) {
+			for(var j = 0; j <20 ; j++){
+				if(this.arr[this.count] == 6){
+					this.t_arr[this.t_count] = this.count;
+					this.t_count++;
+				}
+				this.count++;
+			}
+		}
+
+		var temp = Math.round(Math.random()*100) % this.t_arr.length;
+
+		this.capsule = this.t_arr[temp];
+
+		this.arr[200] = this.capsule;
+
 	},
 
 	get_Arr : function(){
@@ -40,7 +63,6 @@ exports.Map = {
 
 	draw : function(context,temp){
 
-		//alert("asd");
 		this.count = 0;
 		for (var i = 0; i < 6; i++) {
 			for(var j = 0; j <10 ; j++){

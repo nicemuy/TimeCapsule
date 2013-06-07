@@ -9,9 +9,12 @@ function Map(){
 		
 		this.box = new Image();
 		this.spark = new Image();
+		this.shadow = new Image();
 		
 		this.box.src="/img/chest.png";
 		this.spark.src="/img/sparks.png";
+		this.shadow.src="/img/shadow.png";
+
 	},
 
 	this.get_Arr = function(){
@@ -43,6 +46,8 @@ function Map(){
 				if(this.arr[count] == 4){
 					context.drawImage(this.box,0,0,48,48,100*j+25,100*i+25,50,50);
 					context.drawImage(this.spark,48*(temp%6),0,32,48,100*j+25,100*i+25,50,50);
+				}else if(this.arr[count] == -1){
+					context.drawImage(this.shadow,0,0,48,48,100*j+25,100*i+25,50,50);
 				}
 				count++;
 			}

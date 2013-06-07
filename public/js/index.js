@@ -45,7 +45,7 @@ function indexPaging(page){
                 if(data.results[index].open_flag){
                     $('<a></a>',{
                         class:'btn btn-info btn-small',
-                        href:'/#test',
+                        href:'/show',
                         target:'_blank',
                         text:'열기'
                     }).appendTo(buryItem);

@@ -1,8 +1,8 @@
 
 function Player(){
 
-	this.init = function(context){
-		this.name = 'asd';
+	this.init = function(name){
+		this.name = name;
 		this.hero = new Image();
 		this.hero.src='/img/ogre.png';
 		this.m_xpos = 0;
@@ -64,12 +64,28 @@ function Player(){
 		return this.m_ypos;
 	},
 
+	this.get_sxpos = function(){
+		return this.sub_xpos;
+	},
+
+	this.get_sypos = function(){
+		return this.sub_ypos;
+	},
+
 	this.set_xpos = function(xpos){
 		this.m_xpos = xpos;
 	},
 
 	this.set_ypos = function(ypos){
 		this.m_ypos = ypos;
+	},
+
+	this.set_sxpos = function(xpos){
+		this.sub_xpos = xpos;
+	},
+
+	this.set_sypos = function(ypos){
+		this.sub_ypos = ypos;
 	},
 
 	this.set_message = function(message){
@@ -81,6 +97,9 @@ function Player(){
 	},
 	this.set_clength = function(clength){
 		this.clength = clength;
+	},
+	this.set_time = function(time){
+		this.time = time;
 	},
 
 	this.move = function(arr,motion){
@@ -228,16 +247,24 @@ function Player(){
 
 					if(this.h*100-(100*2/3) <= this.m_ypos && this.m_ypos < this.h*100+100-(100*2/3)){
 
-						if(arr[count] == 6 || arr[count] == 5){
+						if(arr[count] == 6){
 							//alert("count = "+count);
 
 							socket.emit('hit', {p_name: this.name, count : count });
 			
-						}else if(arr[count] == 4 ){
+						}else if(arr[count] == 5 ){
 
-							socket.emit('last_hit', {p_name: this.name, count : count });
+							if(count == arr[200]){
 
-							alert("타임캡슐이 개봉되었습니다!!!");
+								socket.emit('last_hit', {p_name: this.name, count : count });
+
+								alert("타임캡슐이 개봉되었습니다!!!");
+
+							}else{
+								socket.emit('last_hit', {p_name: this.name, count : count });
+
+								alert("꽝이지롱~~~~~!!!");
+							}
 						}
 					}
 				}
@@ -266,16 +293,24 @@ function Player(){
 		
 					if(this.h*100+(100*2/3) <= t && t < this.h*100+100+(100*2/3)){
 									
-						if(arr[count] == 6 || arr[count] == 5){
+						if(arr[count] == 6 ){
 							//alert("count = "+count);
 
 							socket.emit('hit', {p_name: this.name, count : count });
 			
-						}else if(arr[count] == 4 ){
+						}else if(arr[count] == 5 ){
 
-							socket.emit('last_hit', {p_name: this.name, count : count });
+							if(count == arr[200]){
 
-							alert("타임캡슐이 개봉되었습니다!!!");
+								socket.emit('last_hit', {p_name: this.name, count : count });
+
+								alert("타임캡슐이 개봉되었습니다!!!");
+
+							}else{
+								socket.emit('last_hit', {p_name: this.name, count : count });
+
+								alert("꽝이지롱~~~~~!!!");
+							}
 						}
 					}
 				}
@@ -304,16 +339,24 @@ function Player(){
 								
 					if(this.h*100-(100*2/3) <= t && t < this.h*100+100-(100*2/3)){
 						
-						if(arr[count] == 6 || arr[count] == 5){
+						if(arr[count] == 6 ){
 							//alert("count = "+count);
 
 							socket.emit('hit', {p_name: this.name, count : count });
 			
-						}else if(arr[count] == 4 ){
+						}else if(arr[count] == 5 ){
 
-							socket.emit('last_hit', {p_name: this.name, count : count });
+							if(count == arr[200]){
 
-							alert("타임캡슐이 개봉되었습니다!!!");
+								socket.emit('last_hit', {p_name: this.name, count : count });
+
+								alert("타임캡슐이 개봉되었습니다!!!");
+
+							}else{
+								socket.emit('last_hit', {p_name: this.name, count : count });
+
+								alert("꽝이지롱~~~~~!!!");
+							}
 						}
 					}
 				}
@@ -346,16 +389,24 @@ function Player(){
 								
 					if(this.h*100-(100*2/3) <= this.m_ypos && this.m_ypos < this.h*100+100-(100*2/3)){
 
-						if(arr[count] == 6 || arr[count] == 5){
+						if(arr[count] == 6 ){
 							//alert("count = "+count);
 
 							socket.emit('hit', {p_name: this.name, count : count });
 			
-						}else if(arr[count] == 4 ){
+						}else if(arr[count] == 5 ){
 
-							socket.emit('last_hit', {p_name: this.name, count : count });
+							if(count == arr[200]){
 
-							alert("타임캡슐이 개봉되었습니다!!!");
+								socket.emit('last_hit', {p_name: this.name, count : count });
+
+								alert("타임캡슐이 개봉되었습니다!!!");
+
+							}else{
+								socket.emit('last_hit', {p_name: this.name, count : count });
+
+								alert("꽝이지롱~~~~~!!!");
+							}
 						}
 					}
 				}
@@ -371,7 +422,7 @@ function Player(){
 	this.chat = function(){
 
 
-		if(this.time < 100){
+		if(this.time < 50){
 
 			this.context.font ="20px Lucida Console"; // 채팅글 보여주기
 			this.context.fillStyle = '#000000';
@@ -380,11 +431,10 @@ function Player(){
 			this.context.globalAlpha = 1;
 			this.context.fillStyle = '#ffffff';
 			this.context.fillText (this.message,this.m_xpos-5*this.clength+30,this.m_ypos-5);
-			
 			this.time++;
 
 		}else{
-
+			
 			this.time =0;
 			this.clength=0;
 			this.message="";

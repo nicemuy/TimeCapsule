@@ -22,6 +22,7 @@ function Chat(){
 		if (e.keyCode == 13) {
 			
 			sPlayer.set_hold(false);
+			sPlayer.set_time(0);
 			
 			socket.emit('chat', { p_name: sPlayer.name, content: $("#textBox").val() });
 			
