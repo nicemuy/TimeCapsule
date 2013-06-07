@@ -5,6 +5,9 @@ block css
 
 block js
     script(type='text/javascript',src='/js/index.js')
+    script
+        if (window.location.hash == '#_=_')
+            window.location.hash = '';
 
 block row2col1
     .item-list

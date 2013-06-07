@@ -1,0 +1,13 @@
+ul li{
+	text-align:center;
+	list-style-type: none;
+}
+
+.textBox{
+	width : 250px;
+}
+
+#inputDiv{
+	height: 10px;	
+	overflow-y: 'scroll';
+}

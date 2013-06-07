@@ -18,6 +18,7 @@ html
     link(rel='shortcut icon',href='img/favicon.ico')
     script(type='text/javascript', src='js/jquery.min.js')
     script(type='text/javascript', src='js/bootstrap.min.js')
+    script(type='text/javascript', src='js/bootstrap.file-input.js')
     block js
     body
     block content
@@ -43,8 +44,9 @@ html
                                             li.divider-vertical
                                             li.dropdown
                                                 a.dropdown-toggle(data-toggle='dropdown',href='#',style='padding: 5px 15px')
-                                                    img(src='https://graph.facebook.com/#{session.auth.facebook.user.id}/picture?type=square',alt='존잘',style='width:30px;height:30px')
+                                                    img(src='https://graph.facebook.com/#{session.auth.facebook.user.id}/picture?type=square',alt='잘생김',style='width:30px;height:30px')
                                                     |&nbsp;#{session.auth.facebook.user.name}
+
                                                 ul.dropdown-menu
                                                     li
                                                         a(href='#') Action
@@ -57,10 +59,14 @@ html
                                                         a(href='#') Separated link
             div.row
                 div.span9
-                    block row2col1
+                    div.row
+                        div.span3
+                            block row2col1
+                        div.span6
+                             block row2col2
                     div.row
                         div.span9
                             block row2col1row1col1
                 div.span3
                     //div.vertical-line
-                    block row2col2
+                    block row2col3

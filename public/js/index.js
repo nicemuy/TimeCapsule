@@ -116,7 +116,7 @@ function orderPaging(page){
             $('<div class="bury"></div>').append($('<a></a>',{
                 class:'btn btn-mini',
                 text:'묻기',
-                href:'#'
+                href:'/buryView'
             })).appendTo(orderItem);
 
             $('.bought>ul').append(orderItem);

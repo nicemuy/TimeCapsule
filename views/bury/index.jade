@@ -1,0 +1,189 @@
+extends layout
+
+block css
+    link(href='/css/index.css',rel='stylesheet')
+    link(href='/css/bury.css',rel='stylesheet')
+
+block js
+    script(src='http://code.jquery.com/jquery-1.8.1.js')
+    
+    script(type='text/javascript',src='/js/bury.js')
+
+    - var tee = JSON.parse(fbFriends2); 
+    
+
+    script
+        var contents = '';
+
+        $(function(){
+            contents += '<div class="accordion-group">';
+            contents += '   <div class="accordion-heading">';
+            contents += '       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse0"> 1번글 </a>';
+            contents += '       <input type="text" name="title" />';
+            contents += '   </div>';
+            contents += '</div>';
+            $('#textForm').append(contents);
+
+
+        $('#upFiles').on("change", function(){
+            
+            $('#fileNameSpace').empty();
+            var upFiles = document.getElementById('upFiles');
+            var nameBlock = '';
+            var imageName = '';
+
+            nameBlock += '<ul>';
+            for(var i=0; i<upFiles.files.length; ++i){
+                imageName=upFiles.files.item(i).name;
+                nameBlock +='<li>';
+                nameBlock +=imageName;
+                nameBlock +='</li>';
+            }
+            nameBlock += '</ul>';
+
+            $('#fileNameSpace').append(nameBlock);
+        })
+        }); // onload
+
+        function fileCheck(){
+            var upFiles = document.getElementById('upFiles');
+
+            if(upFiles.files.length == 0){
+                alert("파일을 첨부해주세요.");
+                return false;
+            }
+
+            $('#inputForm').submit();
+        }
+
+        var jsonT = eval(!{fbFriends2});
+        //alert('#{tee.data[0].name}'+'<<1');
+        //alert(jsonT.data[0].name+'<<2');
+
+        //searchFriend 변수
+        var resultSet = new Array();
+        
+        //addFriend 변수
+        var setFriends = new Array();
+
+        function searchFriend(){
+            $('div[id="result"]').empty();
+            var searchValue = $('input[name="searchValue"]').val();
+            var filter = new RegExp(searchValue, i);
+            
+            for(var i = 0 ; i <jsonT.data.length; i++){                
+                if(filter.test(jsonT.data[i].name.toLowerCase())){
+                    resultSet.push(jsonT.data[i]);
+                    
+                    $('div[id="result"]').append('<li> <img src="https://graph.facebook.com/'+jsonT.data[i].id+'/picture?type=square"/><a href = "#" onclick="addFriends('+jsonT.data[i].id+',\''+jsonT.data[i].name+'\')">'+ jsonT.data[i].name+'</a></li>');
+                }
+            }
+        }
+        
+        
+        function addContents(){
+            $('#inputForm ul li:last').prev().before(contents);
+        };
+
+        function addFriends(friendId,friendName){
+            $('div[id="selectFriends"]').empty();
+            setFriends.push(
+                {id:friendId, name:friendName}
+            );
+            for(var i=0; i<setFriends.length; i++){
+                $('div[id="selectFriends"]').append('<li> <img src="https://graph.facebook.com/'+setFriends[i].id+'/picture?type=square"/><a href = "#" onclick="addFriends('+jsonT.data[i].id+',\''+jsonT.data[i].name+'\')">'+ setFriends[i].name+'</a></li>');           
+            }
+        }              
+
+        
+block row2col1
+    ul
+        li
+            img(src='/img/capsule9.png',alt='capsule9')
+            div.bury
+                button.btn.btn-large.btn-primary.disabled(type='button', disabled='disabled') 10GB / 5 month
+        li
+            .alert.alert-info 
+                ul
+                    #selectFriends
+
+        li
+            a.btn(href='#friendModal',role='button', data-toggle='modal')친구추가
+            #friendModal.modal.hide.fade(tabindex='-1', role='dialog', aria-labelledby='friendModalLabel', aria-hidden='true')
+                .modal-header
+                        button.close(type='button',data-dismiss='modal', aria-hidden='true') x
+                        h3#friendModalLabel Modal header
+                        .modal-body
+                            ul
+                                li
+                                    검색 :
+                                    input(type='text', name='searchValue', placeholder='이름을 입력하세요.', onkeyup='searchFriend()')
+                                #result         
+
+
+
+                        .modal-footer
+                            button.btn(data-dismiss='modal', aria-hidden='true') Close
+                            button.btn.btn-primary(data-dismiss='modal', aria-hidden='true') Save changes    
+    
+block row2col2
+    ul
+        li
+            form(action='/upload', method='post', id='inputForm', enctype='multipart/form-data')
+                    
+                    ul
+                        li
+                            div#accordion2.accordion
+                                #textForm
+                        li
+                            button.btn(type='button', onclick='addContents()') 글 추가 
+                        li
+                            input(type='file', name='imgs', id='upFiles', title="파일을 선택하세요.", multiple="")
+                            input.btn(type='button', onclick='fileCheck()', value='묻기');
+                    #fileNameSpace
+                                 
+
+block row2col1row1col1
+    .item-list.logos
+        a(href='#')
+            img(src='/img/facebook-logo.png',alt='facebook')
+        a(href='#')
+            img(src='/img/twitter-logo.png',alt='twitter')
+        a(href='#')
+            img(src='/img/google-logo.png',alt='google')
+
+block row2col3
+    .bought
+        ul.unstyled.text-center
+            li
+                img(src='/img/capsule9.png',alt='capsule9')
+                div.bury
+                    a.btn.btn-mini(href='/buryView') 묻기
+            li
+                img(src='/img/capsule10.png',alt='capsule10')
+                div.bury
+                    a.btn.btn-mini(src='/buryView') 묻기
+            li
+                img(src='/img/capsule1.png',alt='capsule1')
+                div.bury
+                    a.btn.btn-mini(src='/buryView') 묻기
+            li
+                img(src='/img/capsule2.png',alt='capsule2')
+                div.bury
+                    a.btn.btn-mini(src='/buryView') 묻기
+        div.pagination.pagination-mini.pagination-centered
+            ul
+                li
+                    a(href='#') Prev
+                li.active
+                    a(href='#') 1
+                li
+                    a(href='#') 2
+                li
+                    a(href='#') 3
+                li
+                    a(href='#') 4
+                li
+                    a(href='#') 5
+                li
+                    a(href='#') Next

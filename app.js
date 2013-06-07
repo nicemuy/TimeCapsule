@@ -18,9 +18,13 @@ var express = require('express')
 var app = express();
 
 map.init();
-
+var usersById = {};
 var usersByFbId = {};
-var nextUserId = 0;
+
+everyauth.everymodule
+  .findUserById( function (id, callback) {
+    callback(null, usersById[id]);
+  });
 
 everyauth
   .facebook
@@ -30,12 +34,7 @@ everyauth
       return usersByFbId[fbUserMetadata.id] ||
         (usersByFbId[fbUserMetadata.id] = fbUserMetadata);
     })
-    .redirectPath('/1');
-
-everyauth.everymodule
-  .findUserById( function (id, callback) {
-    callback(null, usersById[id]);
-  });
+    .redirectPath('/');
   
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -43,10 +42,15 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.favicon());
 app.use(express.logger('dev'));
-app.use(express.bodyParser());
+app.use(express.limit('20mb'));
+app.use(express.bodyParser({uploadDir: __dirname + '/tmp'}));
 app.use(express.methodOverride());
 app.use(express.cookieParser('your secret here'));
 app.use(express.session());
+app.use(function(req, res, next) {
+  res.locals.session = req.session;
+  next();
+});
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -65,6 +69,8 @@ app.get('/users', user.list);
 app.get('/minigame', routes.minigame);
 app.get('/indexPaging/:page', routes.indexPaging);
 app.get('/orderPaging/:page', routes.orderPaging);
+app.get('/buryView', routes.buryView);
+app.post('/upload', routes.upload);
 
 var server = http.createServer(app);
 
