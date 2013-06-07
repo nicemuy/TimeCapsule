@@ -52,7 +52,7 @@ function indexPaging(page){
                 }else{
                     $('<a></a>',{
                         class:'btn btn-success btn-small',
-                        href:'/minigame',
+                        href:'/minigame?capsule_id='+data.results[index].capsule_id,
                         target:'_blank',
                         text:'찾기'
                     }).appendTo(buryItem);
