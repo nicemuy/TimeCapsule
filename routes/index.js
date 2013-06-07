@@ -39,8 +39,15 @@ exports.show = function(req, res){
 exports.minigame = function(req, res){
   //res.render('guest/main', { title: 'GuestMain', layout: 'guestLayout.jade' });
   var queryData = url.parse(req.url, true).query;
-  console.log(queryData.tId +"<------------------url");
-  res.render('minigame/huhu',{data:queryData.tId});
+  console.log(queryData.capsule_id +"<------------------url");
+  res.render('minigame/huhu',{ name : req.session.auth.facebook.user.id, capsule_id : queryData.capsule_id });
+};
+
+exports.success = function(req, res){
+    connection.query('update capsule set open_flag = true where capsule_id = ?',[(req.params.c_id)],function(err,results,fields){
+        console.log("hahahahahahahahahahahahahahah ============ "+req.params.c_id);
+        res.json({results: true});
+    });
 };
 
 exports.indexPaging = function(req, res){
