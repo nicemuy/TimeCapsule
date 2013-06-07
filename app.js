@@ -69,6 +69,7 @@ app.get('/users', user.list);
 app.get('/minigame', routes.minigame);
 app.get('/indexPaging/:page', routes.indexPaging);
 app.get('/orderPaging/:page', routes.orderPaging);
+app.get('/success/:c_id', routes.success);
 app.get('/buryView', routes.buryView);
 app.post('/upload', routes.upload);
 
@@ -106,5 +107,10 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('last_hit', function (data) {
     Minigame.last_hit(data,io,map);
+  });
+
+  socket.on('clear', function (data) {
+    Minigame.clear(data,socket);
+    map.init();
   });
 });

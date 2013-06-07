@@ -90,5 +90,8 @@ exports.Minigame = {
 
     io.sockets.emit('hit_react', { c_map : map.get_Arr() });
 
+  },
+  clear : function(data,socket){
+    socket.broadcast.emit('clear_react', { gameover : data.gameover });
   }
 }

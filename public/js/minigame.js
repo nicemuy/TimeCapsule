@@ -9,8 +9,10 @@
 
 	var socket = io.connect('http://localhost:3000/');
 
+  
 	sPlayer.init(name);
-	sMap.init();
+	sPlayer.set_cid(c_id);
+  sMap.init();
 	splayerList.push(sPlayer);
 
 	window.addEventListener('load',eventWindowLoaded,false);
@@ -186,6 +188,11 @@
     socket.on('hit_react', function (data) {
       console.log(data.c_map);
       sMap.set_Arr(data.c_map);
+    });
+
+    socket.on('clear_react', function (data) {
+      var url = "http://localhost:3000/#";    
+      $(location).attr('href',url);
     });
 
 		startUp();

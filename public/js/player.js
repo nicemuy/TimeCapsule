@@ -18,6 +18,11 @@ function Player(){
 		this.direction=0;
 		this.state=1;
 		this.hitpoint=true;
+		this.c_id=0;
+	},
+
+	this.set_cid = function(c_id){
+		this.c_id=c_id;
 	},
 
 	this.get_name = function(){
@@ -258,7 +263,15 @@ function Player(){
 
 								socket.emit('last_hit', {p_name: this.name, count : count });
 
-								alert("타임캡슐이 개봉되었습니다!!!");
+								alert("타임캡슐이 개봉되었습니다!!! ");
+
+								 $.get('/success/'+this.c_id,function(data){
+
+								 	socket.emit('clear', {gameover : true});
+								 	var url = "http://localhost:3000/#";    
+									$(location).attr('href',url);
+								 });
+
 
 							}else{
 								socket.emit('last_hit', {p_name: this.name, count : count });
@@ -306,6 +319,13 @@ function Player(){
 
 								alert("타임캡슐이 개봉되었습니다!!!");
 
+								$.get('/success/'+this.c_id,function(data){
+
+								 	socket.emit('clear', {gameover : true});
+								 	var url = "http://localhost:3000/#";    
+									$(location).attr('href',url);
+								 });
+
 							}else{
 								socket.emit('last_hit', {p_name: this.name, count : count });
 
@@ -351,6 +371,13 @@ function Player(){
 								socket.emit('last_hit', {p_name: this.name, count : count });
 
 								alert("타임캡슐이 개봉되었습니다!!!");
+
+								$.get('/success/'+this.c_id,function(data){
+
+								 	socket.emit('clear', {gameover : true});
+								 	var url = "http://localhost:3000/#";    
+									$(location).attr('href',url);
+								 });
 
 							}else{
 								socket.emit('last_hit', {p_name: this.name, count : count });
@@ -401,6 +428,13 @@ function Player(){
 								socket.emit('last_hit', {p_name: this.name, count : count });
 
 								alert("타임캡슐이 개봉되었습니다!!!");
+
+								$.get('/success/'+this.c_id,function(data){
+
+								 	socket.emit('clear', {gameover : true});
+								 	var url = "http://localhost:3000/#";    
+									$(location).attr('href',url);
+								 });
 
 							}else{
 								socket.emit('last_hit', {p_name: this.name, count : count });
