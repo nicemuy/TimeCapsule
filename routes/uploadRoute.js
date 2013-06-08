@@ -54,13 +54,13 @@ exports.upload = function(req, res){
         //2개이상오면 배열. 구분해서 Text INsert
         if(Array.isArray(req.body.title)){
             for(var i=0; i<req.body.title.length; i++){
-                chain.query('INSERT INTO contents (CAPSULE_ID, CONTENT_TYPE, TEXT_TITLE, TEXT_CONTENTS) VALUES (?,"test",?,?)',[parseInt(req.body.cId),req.body.title[i], req.body.contents[i]], function(err,results,fields){
+                chain.query('INSERT INTO contents (CAPSULE_ID, CONTENT_TYPE, TEXT_TITLE, TEXT_CONTENTS) VALUES (?,"text",?,?)',[parseInt(req.body.cId),req.body.title[i], req.body.contents[i]], function(err,results,fields){
                     console.log(i+'titlebodyArr');
                     if(err) throw err;
                 });
             };    
         }else{
-            chain.query('INSERT INTO contents (CAPSULE_ID, CONTENT_TYPE, TEXT_TITLE, TEXT_CONTENTS) VALUES (?,"test",?,?)',[parseInt(req.body.cId),req.body.title, req.body.title.contents], function(err,results,fields){
+            chain.query('INSERT INTO contents (CAPSULE_ID, CONTENT_TYPE, TEXT_TITLE, TEXT_CONTENTS) VALUES (?,"text",?,?)',[parseInt(req.body.cId),req.body.title, req.body.title.contents], function(err,results,fields){
                 console.log(i+'titlebody');
                 if(err) throw err;
             });
