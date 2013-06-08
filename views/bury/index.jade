@@ -18,7 +18,15 @@ block js
         
         var txtCnt=0;
         $(function(){
+            var CapsuleTitle ='';
+            CapsuleTitle += '<div class="accordion-group">';
+            CapsuleTitle += '   <div class="accordion-heading">';
+            CapsuleTitle += '       캡슐이름 : <input type="text" name="CapsuleTitle" />';
+            CapsuleTitle += '   </div>';
+            CapsuleTitle += '</div>';
+
             contents = MakeContents(txtCnt);
+            $('#textForm').append(CapsuleTitle);
             $('#textForm').append(contents);
 
         $('#upFiles').on("change", function(){

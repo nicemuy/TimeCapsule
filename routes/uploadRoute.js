@@ -43,31 +43,25 @@ exports.upload = function(req, res){
     var images = [];
     var isImage = false;
 
+    chain.query('UPDATE capsule SET capsule_title = ? , bury_flag = true WHERE CAPSULE_ID=?', [req.body.CapsuleTitle, parseInt(req.body.cId)], function(err,results,fields){
+        if(err) throw err;
+    })
     chain.query('UPDATE capsule SET START_DATE = CURDATE() WHERE CAPSULE_ID=?', [(parseInt(req.body.cId))], function(err,results,fields){
         if(err) throw err;
-
     })
     
     if(req.body.title != null ||req.body.title != undefined){
         //2개이상오면 배열. 구분해서 Text INsert
         if(Array.isArray(req.body.title)){
             for(var i=0; i<req.body.title.length; i++){
-                chain.query('INSERT INTO text (TEXT_SUBJECT, TEXT_CONTENTS) VALUES (?,?)',[req.body.title[i], req.body.title.contents[i]], function(err,results,fields){
+                chain.query('INSERT INTO contents (CAPSULE_ID, CONTENT_TYPE, TEXT_TITLE, TEXT_CONTENTS) VALUES (?,"test",?,?)',[parseInt(req.body.cId),req.body.title[i], req.body.contents[i]], function(err,results,fields){
                     console.log(i+'titlebodyArr');
-                    if(err) throw err;
-                    
-                }).query('INSERT INTO contents (CAPSULE_ID,TEXT_ID) VALUES ( ?, (SELECT LAST_INSERT_ID()))', [(req.body.cId)],function(err,results2,fields){
-                    console.log(i+'titleinnerbodyArr');
                     if(err) throw err;
                 });
             };    
         }else{
-            chain.query('INSERT INTO text (TEXT_SUBJECT, TEXT_CONTENTS) VALUES (?,?)',[req.body.title, req.body.title.contents], function(err,results,fields){
+            chain.query('INSERT INTO contents (CAPSULE_ID, CONTENT_TYPE, TEXT_TITLE, TEXT_CONTENTS) VALUES (?,"test",?,?)',[parseInt(req.body.cId),req.body.title, req.body.title.contents], function(err,results,fields){
                 console.log(i+'titlebody');
-                if(err) throw err;
-                
-            }).query('INSERT INTO contents (CAPSULE_ID,TEXT_ID) VALUES ( ?, (SELECT LAST_INSERT_ID()))', [(req.body.cId)],function(err,results2,fields){
-                console.log(i+'titlebodyArr');
                 if(err) throw err;
             });
         };
@@ -139,6 +133,7 @@ function checkType(image){
 }
  
 function renameImg(req,image,callbock){
+    console.log(image.type);
     var tmp_path = image.path;
     var target_path = './public/upload/' + image.name;
     console.log('->> tmp_path: ' + tmp_path );
@@ -149,31 +144,20 @@ function renameImg(req,image,callbock){
     fs.rename(tmp_path, target_path, function(err){
         if(err) throw err;
             if(image.type.indexOf('image') > -1){
-                chain.query('INSERT INTO img (img_url) VALUES (?)',[(target_path)], function(err,results4,fields){
+                chain.query('INSERT INTO contents (CAPSULE_ID, content_type, content_url) VALUES (?,"image",?)',[parseInt(req.body.cId),target_path], function(err,results4,fields){
                     console.log('imgbody: '+ image.name);
                     if(err) throw err;
                         
-                }).query('INSERT INTO contents (CAPSULE_ID,img_ID) VALUES ( ?, (SELECT LAST_INSERT_ID()))', [(req.body.cId)],function(err,results5,fields){
-                    console.log('imgbodyInner : '+ image.name);
-                    if(err) throw err;
                 });
 
             }else if(image.type.indexOf('video') > -1){
-                chain.query('INSERT INTO media (media_url) VALUES (?)',[(target_path)], function(err,results4,fields){
+                chain.query('INSERT INTO contents (CAPSULE_ID, content_type, content_url) VALUES (?,"video",?)',[parseInt(req.body.cId), target_path], function(err,results4,fields){
                     console.log('mediabody : '+ image.name);
                     if(err) throw err;
-                }).query('INSERT INTO contents (CAPSULE_ID,media_ID) VALUES ( ?, (SELECT LAST_INSERT_ID()))', [(req.body.cId)],function(err,results5,fields){
-                    console.log('mediabodyInner : '+ image.name);
-                    if(err) throw err;
                 });
-                
-            }else{
-                chain.query('INSERT INTO etc (etc_url) VALUES (?)',[(target_path)], function(err,results4,fields){
+            }else if(image.type.indexOf('audio') > -1){
+                chain.query('INSERT INTO contents (CAPSULE_ID, content_type, content_url) VALUES (?,"audio",?)',[parseInt(req.body.cId), target_path], function(err,results4,fields){
                     console.log('etcbody : '+ image.name);
-                    if(err) throw err;
-                        
-                }).query('INSERT INTO contents (CAPSULE_ID,etc_ID) VALUES ( ?, (SELECT LAST_INSERT_ID()))', [(req.body.cId)],function(err,results5,fields){
-                    console.log('etcbodyinner : '+ image.name);
                     if(err) throw err;
                 });
             };
