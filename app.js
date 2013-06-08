@@ -14,6 +14,7 @@ function requireLogin(req, res, next) {
 var express = require('express')
   , routes = require('./routes')
   , user = require('./routes/user')
+  , uploadRoute = require('./routes/uploadRoute')
   , http = require('http')
   , path = require('path')
   , everyauth = require('everyauth')
@@ -95,7 +96,7 @@ app.get('/orderPaging/:page', routes.orderPaging);
 app.get('/success/:c_id', routes.success);
 app.all('/buryView', requireLogin);
 app.get('/buryView', routes.buryView);
-app.post('/upload', routes.upload);
+app.post('/upload', uploadRoute.upload);
 
 var server = http.createServer(app);
 

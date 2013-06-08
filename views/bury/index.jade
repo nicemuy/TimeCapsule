@@ -14,16 +14,10 @@ block js
 
     script
         var contents = '';
-
+        var txtCnt=0;
         $(function(){
-            contents += '<div class="accordion-group">';
-            contents += '   <div class="accordion-heading">';
-            contents += '       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse0"> 1번글 </a>';
-            contents += '       <input type="text" name="title" />';
-            contents += '   </div>';
-            contents += '</div>';
+            contents = MakeContents(txtCnt);
             $('#textForm').append(contents);
-
 
         $('#upFiles').on("change", function(){
             
@@ -35,9 +29,9 @@ block js
             nameBlock += '<ul>';
             for(var i=0; i<upFiles.files.length; ++i){
                 imageName=upFiles.files.item(i).name;
-                nameBlock +='<li>';
+                nameBlock +='<li><a href="#" class="btn btn-large disabled">';
                 nameBlock +=imageName;
-                nameBlock +='</li>';
+                nameBlock +='</a></li>';
             }
             nameBlock += '</ul>';
 
@@ -45,15 +39,21 @@ block js
         })
         }); // onload
 
-        function fileCheck(){
-            var upFiles = document.getElementById('upFiles');
+        function MakeContents(cnt){
+            var temp='';
+            temp += '<div class="accordion-group">';
+            temp += '   <div class="accordion-heading">';
+            temp += '       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse' + txtCnt + '">' + txtCnt+ '번글 </a>';
+            temp += '       제목 : <input type="text" name="title" />';
+            temp += '   </div>';
+            temp += '   <div id="collapse' + txtCnt + '" class="accordion-body collapse in">';
+            temp += '       <div class="accordion-inner">';
+            temp += '           <textarea class="textBox" name="contents" rows="4" cols="50"></textarea>';
+            temp += '       </div>';
+            temp += '   </div>';
+            temp += '</div>';
 
-            if(upFiles.files.length == 0){
-                alert("파일을 첨부해주세요.");
-                return false;
-            }
-
-            $('#inputForm').submit();
+            return temp;
         }
 
         var jsonT = eval(!{fbFriends2});
@@ -65,6 +65,25 @@ block js
         
         //addFriend 변수
         var setFriends = new Array();
+
+        function fileCheck(){
+            var upFiles = document.getElementById('upFiles');
+            var friendid = '';
+            var friendName = '';
+            for(var k = 0; k<setFriends.length; k++){
+                friendid = $("<input>").attr({"type":"hidden","name":"friendsId"}).val(setFriends[k].id);
+                friendName = $("<input>").attr({"type":"hidden","name":"friendsName"}).val(setFriends[k].name);
+                $('#friends').append(friendid);
+                $('#friends').append(friendName);
+            }
+            $('#friends').val(setFriends);
+            if(upFiles.files.length == 0){
+                alert("파일을 첨부해주세요.");
+                return false;
+            }
+
+            $('#inputForm').submit();
+        }
 
         function searchFriend(){
             $('div[id="result"]').empty();
@@ -82,7 +101,9 @@ block js
         
         
         function addContents(){
-            $('#inputForm ul li:last').prev().before(contents);
+            txtCnt++;
+            contents = MakeContents(txtCnt);
+            $('#textForm').append(contents);
         };
 
         function addFriends(friendId,friendName){
@@ -140,6 +161,8 @@ block row2col2
                         li
                             input(type='file', name='imgs', id='upFiles', title="파일을 선택하세요.", multiple="")
                             input.btn(type='button', onclick='fileCheck()', value='묻기');
+                        li 
+                            #friends
                     #fileNameSpace
                                  
 
