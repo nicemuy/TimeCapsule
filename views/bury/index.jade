@@ -14,9 +14,19 @@ block js
 
     script
         var contents = '';
+        var cId = #{capsule_id};
+        
         var txtCnt=0;
         $(function(){
+            var CapsuleTitle ='';
+            CapsuleTitle += '<div class="accordion-group">';
+            CapsuleTitle += '   <div class="accordion-heading">';
+            CapsuleTitle += '       캡슐이름 : <input type="text" name="CapsuleTitle" />';
+            CapsuleTitle += '   </div>';
+            CapsuleTitle += '</div>';
+
             contents = MakeContents(txtCnt);
+            $('#textForm').append(CapsuleTitle);
             $('#textForm').append(contents);
 
         $('#upFiles').on("change", function(){
@@ -70,13 +80,16 @@ block js
             var upFiles = document.getElementById('upFiles');
             var friendid = '';
             var friendName = '';
+            var cIdInput = ''; // capsule_id를 폼으로 보내기 위함 
             for(var k = 0; k<setFriends.length; k++){
                 friendid = $("<input>").attr({"type":"hidden","name":"friendsId"}).val(setFriends[k].id);
                 friendName = $("<input>").attr({"type":"hidden","name":"friendsName"}).val(setFriends[k].name);
                 $('#friends').append(friendid);
                 $('#friends').append(friendName);
             }
-            $('#friends').val(setFriends);
+            cIdInput = $("<input>").attr({"type":"hidden", "name":"cId"}).val(cId);
+            $('#friends').append(cIdInput);
+            
             if(upFiles.files.length == 0){
                 alert("파일을 첨부해주세요.");
                 return false;

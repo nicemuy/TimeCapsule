@@ -98,6 +98,7 @@ app.get('/success/:c_id', routes.success);
 app.all('/buryView', requireLogin);
 app.get('/buryView', routes.buryView);
 app.post('/upload', uploadRoute.upload);
+app.get('/admin', routes.admin);
 
 var server = http.createServer(app);
 
