@@ -81,7 +81,8 @@ exports.orderPaging = function(req, res){
 
 
 exports.buryView = function(req, res){
-  //res.render('guest/main', { title: 'GuestMain', layout: 'guestLayout.jade' });
+  var queryData = url.parse(req.url, true).query;
+    console.log('qd cid:: ' +queryData.capsule_id);
   var address = 'https://graph.facebook.com/'
           +req.session.auth.facebook.user.id+
           '/friends?access_token='+req.session.auth.facebook.accessToken;
@@ -95,7 +96,7 @@ exports.buryView = function(req, res){
     });
 
     res1.on('end', function(){
-      res.render('bury', { title: 'Express', fbFriends: JSON.parse(fullData),fbFriends2: fullData});
+      res.render('bury', { title: 'Express', fbFriends: JSON.parse(fullData),fbFriends2: fullData, capsule_id :queryData.capsule_id });
     });
     
   });
