@@ -3,7 +3,7 @@ function pause()
     $.jPlayer.pause();
 }
 
-function showPaging(page){
+function showPaging(capsule_id,page){
     var loading = $('<div style="text-align:center"><img alt="loading" src="/img/ajax-loader.gif"/></div>').prependTo('.show-list:not(.logos)').hide();
     $(document).bind('ajaxStart.bury',function(){
         $('.show-list ul').html('');
@@ -14,72 +14,56 @@ function showPaging(page){
         $(document).unbind('.bury');
     });
 
-    $.get('/showPaging/'+page,function(data){
+    $.get('/showPaging/'+capsule_id+'/'+page,function(data){
         for(index in data.results){
-            var buryItem = $('<li></li>');
-            $('<img/>',{
-                src:'/img/'+data.results[index].img,
-                alt:'캡슐',
-                class:'pop'
-            }).appendTo(buryItem);
-            $('<div></div>',{
-                id:'title'+index,
-                style:'display:none',
-                text:data.results[index].kind
-            }).appendTo(buryItem);
+            var showItem = $('<li></li>');
 
-            var curDate = new Date();
-            var startDate = new Date(data.results[index].start_date);
-            var perc = Math.floor(Math.ceil((curDate.getTime()-startDate.getTime())/(1000*60*60*24))/data.results[index].duration*100);
-            perc = perc>100?100:perc;
+            var type;
+            var src;
+            var name;
 
-            $('<div></div>',{
-                id:'pop'+index,
-                style:'display:none',
-                text:data.results[index].size+'byte/'+data.results[index].duration+'일'
-            }).appendTo(buryItem);
-
-            if(perc == 100){
-                $('<div></div>',{
-                    title:'100%',
-                    class:'progress progress-striped progress-success active'
-                }).append($('<div></div>',{
-                        style:'width:100%',
-                        class:'bar'
-                    })).appendTo(buryItem);
-                if(data.results[index].open_flag){
-                    $('<a></a>',{
-                        class:'btn btn-info btn-small',
-                        href:'/show',
-                        target:'_blank',
-                        text:'열기'
-                    }).appendTo(buryItem);
-                }else{
-                    $('<a></a>',{
-                        class:'btn btn-success btn-small',
-                        href:'/minigame?capsule_id='+data.results[index].capsule_id,
-                        target:'_blank',
-                        text:'찾기'
-                    }).appendTo(buryItem);
-                }
-            }else{
-                $('<div></div>',{
-                    title:perc+'%',
-                    class:'progress progress-striped active'
-                }).append($('<div></div>',{
-                        style:'width:'+perc+'%',
-                        class:'bar'
-                    })).appendTo(buryItem);
+            if(data.results[index].content_type == 'text'){
+                type = '#textModal';
+                src = '/img/text.png';
+                name = data.results[index].text_title;
+            }else if(data.results[index].content_type == 'image'){
+                type = '#imageModal';
+                src = '/img/picture.png';
+                name = data.results[index].content_url.substr(8);
+            }else if(data.results[index].content_type == 'audio'){
+                type = '#audioModal';
+                src = '/img/audio.png';
+                name = data.results[index].content_url.substr(8);
+            }else if(data.results[index].content_type == 'video'){
+                type = '#videoModal';
+                src = '/img/movie.png';
+                name = data.results[index].content_url.substr(8);
             }
+
+            $('<a></a>',{
+                class:'btn content',
+                href: type,
+                role: 'button',
+                'data-toggle':'modal'
+            }).append($('<div class="frame"></div>').append($('<img/>',{
+                src: src,
+                class: 'pop',
+                alt: 'icon'
+            }))).appendTo(showItem);
+
+            $('<div class="text"></div>',{
+                text:name
+            }).appendTo(showItem);
+
 
             if(index<4){
-                $($('.item-list ul')[0]).append(buryItem);
+                $($('.show-list ul')[0]).append(showItem);
             }else if(index >=4 && index<8){
-                $($('.item-list ul')[1]).append(buryItem);
+                $($('.show-list ul')[1]).append(showItem);
             }
         }
-        $('a.arrow-left').attr('onclick','showPaging('+data.previous+')');
-        $('a.arrow-right').attr('onclick','showPaging('+data.next+')');
+        $('a.arrow-left').attr('onclick','showPaging('+capsule_id+','+data.previous+')');
+        $('a.arrow-right').attr('onclick','showPaging('+capsule_id+','+data.next+')');
     });
 }
 

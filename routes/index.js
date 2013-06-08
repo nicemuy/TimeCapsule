@@ -8,7 +8,28 @@ var url = require("url");
 var https = require('https');
 var util = require('util');
 var fs = require('fs');
+var transaction =  require('node-mysql-transaction');
 
+var trCon = transaction({
+    connection: [mysql.createConnection,{
+        host:'54.214.246.103',
+        port:3306,
+        user:'travler',
+        password:'time',
+        database:'TimeDB'
+    }],
+    staticConnection : 1,
+    dynamicConnection : 1,
+    timeOut:10000
+});
+
+var chain = trCon.chain();
+
+chain.on('commit', function(){
+    console.log('number commit');
+}).on('rollback', function(err){
+        console.log(err);
+});
 
 var connection = mysql.createConnection({
     host:'54.214.246.103',
@@ -27,7 +48,7 @@ exports.purchase = function(req, res){
 }
 
 exports.purchasePost = function(req, res){
-    connection.query('INSERT INTO torder(order_date,refund_flag,method) VALUES(curdate(),false,\'credit\')',function(err, result){
+    connection.query('INSERT INTO torder(order_date,refund_flag,method,userid) VALUES(curdate(),false,\'credit\',?)',[req.session.auth.facebook.user.id],function(err, result){
         if(err) throw err;
         var insertId = result.insertId;
         var loopIndex = 0;
@@ -67,9 +88,9 @@ exports.success = function(req, res){
 };
 
 exports.indexPaging = function(req, res){
-    connection.query('SELECT * FROM capsule_type NATURAL JOIN capsule WHERE bury_flag = true LIMIT ?,?',[(req.params.page-1)*8,8],function(err, results, fields){
+    connection.query('SELECT * FROM capsule_type NATURAL JOIN capsule NATURAL JOIN user WHERE userid = ? and bury_flag = true LIMIT ?,?',[req.session.auth.facebook.user.id,(req.params.page-1)*8,8],function(err, results, fields){
         if(err) throw err;
-        connection.query('SELECT COUNT(*) as total FROM capsule WHERE bury_flag = true',function(err, results2, fields){
+        connection.query('SELECT COUNT(*) as total FROM capsule NATURAL JOIN user WHERE userid = ? and bury_flag = true',[req.session.auth.facebook.user.id],function(err, results2, fields){
             var pathNum = req.params.page;
             var previous = pathNum-1?(pathNum-1):'#';
             var next = pathNum == Math.ceil(results2[0].total/8)?'#':parseInt(pathNum)+1;
@@ -79,9 +100,9 @@ exports.indexPaging = function(req, res){
 };
 
 exports.orderPaging = function(req, res){
-    connection.query('SELECT * FROM capsule_type NATURAL JOIN capsule WHERE bury_flag = false LIMIT ?,?',[(req.params.page-1)*4,4],function(err, results, fields){
+    connection.query('SELECT * FROM capsule_type NATURAL JOIN capsule NATURAL JOIN torder WHERE userid = ? and bury_flag = false LIMIT ?,?',[req.session.auth.facebook.user.id,(req.params.page-1)*4,4],function(err, results, fields){
         if(err) throw err;
-        connection.query('SELECT COUNT(*) as total FROM capsule WHERE bury_flag = false',function(err, results2, fields){
+        connection.query('SELECT COUNT(*) as total FROM capsule NATURAL JOIN torder WHERE userid = ? and bury_flag = false',[req.session.auth.facebook.user.id],function(err, results2, fields){
             const pagingNum = 5;
             const contentNum = 4;
             var pathNum = req.params.page;
@@ -108,12 +129,12 @@ exports.purchasePaging = function(req, res){
 };
 
 exports.showPaging = function(req, res){
-    connection.query('SELECT * FROM capsule_type LIMIT ?,?',[(req.params.page-1)*6,6],function(err, results, fields){
+    connection.query('SELECT * FROM contents WHERE capsule_id = ? LIMIT ?,?',[req.params.capsule_id,(req.params.page-1)*8,8],function(err, results, fields){
         if(err) throw err;
-        connection.query('SELECT COUNT(*) as total FROM capsule_type',function(err, results2, fields){
+        connection.query('SELECT COUNT(*) as total FROM contents WHERE capsule_id = ?',[req.params.capsule_id],function(err, results2, fields){
             var pathNum = req.params.page;
             var previous = pathNum-1?(pathNum-1):'#';
-            var next = pathNum == Math.ceil(results2[0].total/6)?'#':parseInt(pathNum)+1;
+            var next = pathNum == Math.ceil(results2[0].total/8)?'#':parseInt(pathNum)+1;
             res.json({results: results ,previous: previous ,next: next});
         });
     });
