@@ -60,7 +60,7 @@ app.use(function(req, res, next) {
   res.locals.session = req.session;
   if(req.url.search('^/purchase$') != -1){
       res.locals.menu = 'purchase';
-  }else if(req.url.search('^/#_=_$')){
+  }else if(req.url.search('^/$') != -1){
       res.locals.menu = 'my';
   }else{
       res.locals.menu = '';
