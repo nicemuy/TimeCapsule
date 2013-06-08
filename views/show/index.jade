@@ -1,52 +1,52 @@
-extends layout
+extends ../layout
 
 block css
     link(href='/css/show.css',rel='stylesheet')
 
 block js
-    script(type='text/javascript',src='/js/index.js')
+    script(type='text/javascript',src='/js/show.js')
 
 block row2col1
     .show-list
         ul.unstyled.inline.text-center
                 li
-                    a.btn#content(href='#friendModal',role='button', data-toggle='modal')
+                    a.btn.content(href='#friendModal',role='button', data-toggle='modal')
                         div.frame
                             img(src='/img/picture.png',alt='picture').pop
                     div.text 영학's 첫경험
                 li
-                    a.btn#content(href='#friendModal',role='button', data-toggle='modal')
+                    a.btn.content(href='#friendModal',role='button', data-toggle='modal')
                         div.frame
                             img(src='/img/movie.png',alt='movie').pop
                     div.text 영학's 첫키스
                 li
-                    a.btn#content(href='#friendModal',role='button', data-toggle='modal')
+                    a.btn.content(href='#friendModal',role='button', data-toggle='modal')
                         div.frame
                             img(src='/img/picture.png',alt='picture').pop
                     div.text 영학's 첫사랑
                 li
-                    a.btn#content(href='#friendModal',role='button', data-toggle='modal')
+                    a.btn.content(href='#friendModal',role='button', data-toggle='modal')
                         div.frame
                             img(src='/img/movie.png',alt='movie').pop
                     div.text 영학's 첫여행                 
         ul.unstyled.inline.text-center
                 li
-                    a.btn#content(href='#friendModal',role='button', data-toggle='modal')
+                    a.btn.content(href='#friendModal',role='button', data-toggle='modal')
                         div.frame
                             img(src='/img/picture.png',alt='picture').pop
                     div.text 영학's 첫경험
                 li
-                    a.btn#content(href='#friendModal',role='button', data-toggle='modal')
+                    a.btn.content(href='#friendModal',role='button', data-toggle='modal')
                         div.frame
                             img(src='/img/movie.png',alt='movie').pop
                     div.text 영학's 첫키스
                 li
-                    a.btn#content(href='#friendModal',role='button', data-toggle='modal')
+                    a.btn.content(href='#friendModal',role='button', data-toggle='modal')
                         div.frame
                             img(src='/img/text.png',alt='text').pop
                     div.text 영학's 첫사랑
                 li
-                    a.btn#content(href='#friendModal',role='button', data-toggle='modal')
+                    a.btn.content(href='#friendModal',role='button', data-toggle='modal')
                         div.frame
                             img(src='/img/text.png',alt='text').pop
                     div.text 영학's 첫경험
@@ -80,4 +80,3 @@ block row2col2
 
             .modal-footer
                 button.btn(data-dismiss='modal', aria-hidden='true') Close
-                button.btn.btn-primary(data-dismiss='modal', aria-hidden='true') Save changes

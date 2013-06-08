@@ -58,6 +58,13 @@ app.use(express.cookieParser('your secret here'));
 app.use(express.session());
 app.use(function(req, res, next) {
   res.locals.session = req.session;
+  if(req.url.search('^/purchase$') != -1){
+      res.locals.menu = 'purchase';
+  }else if(req.url.search('^/$') != -1){
+      res.locals.menu = 'my';
+  }else{
+      res.locals.menu = '';
+  }
   next();
 });
 app.use(app.router);
@@ -76,6 +83,7 @@ app.all('/', requireLogin);
 app.get('/', routes.index);
 app.all('/purchase', requireLogin);
 app.get('/purchase', routes.purchase);
+app.post('/purchase', routes.purchasePost);
 app.all('/show', requireLogin);
 app.get('/show', routes.show);
 app.all('/users', requireLogin);
@@ -83,6 +91,7 @@ app.get('/users', user.list);
 app.all('/minigame', requireLogin);
 app.get('/minigame', routes.minigame);
 app.get('/indexPaging/:page', routes.indexPaging);
+app.get('/purchasePaging/:page', routes.purchasePaging);
 app.get('/orderPaging/:page', routes.orderPaging);
 app.get('/success/:c_id', routes.success);
 app.all('/buryView', requireLogin);

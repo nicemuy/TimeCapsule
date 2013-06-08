@@ -19,11 +19,27 @@ var connection = mysql.createConnection({
 });
 
 exports.index = function(req, res){
-        res.render('index', { title: 'Express' ,session: req.session});
+    res.render('index', { title: 'Express'});
 };
 
 exports.purchase = function(req, res){
     res.render('purchase/index');
+}
+
+exports.purchasePost = function(req, res){
+    connection.query('INSERT INTO torder(order_date,refund_flag,method) VALUES(curdate(),false,\'credit\')',function(err, result){
+        if(err) throw err;
+        var insertId = result.insertId;
+        var loopIndex = 0;
+        for(var i=0;i<req.body.count;i++){
+            connection.query('INSERT INTO capsule(start_date,duration,kind,open_flag,bury_flag,order_id) VALUES(null,?,?,false,false,?)',[req.body.duration,req.body.kind,insertId],function(err, result2){
+                if(err) throw err;
+                loopIndex++;
+                if(loopIndex == req.body.count)
+                    res.send('<html><head></head><body><script>alert("구매가 완료되었습니다.");location.href="/";</script></body></html>'); //바꺼야함
+            });
+        }
+    });
 }
 
 exports.guest = function(req, res){
@@ -78,6 +94,18 @@ exports.orderPaging = function(req, res){
         });
     });
 }
+
+exports.purchasePaging = function(req, res){
+    connection.query('SELECT * FROM capsule_type LIMIT ?,?',[(req.params.page-1)*6,6],function(err, results, fields){
+        if(err) throw err;
+        connection.query('SELECT COUNT(*) as total FROM capsule_type',function(err, results2, fields){
+            var pathNum = req.params.page;
+            var previous = pathNum-1?(pathNum-1):'#';
+            var next = pathNum == Math.ceil(results2[0].total/6)?'#':parseInt(pathNum)+1;
+            res.json({results: results ,previous: previous ,next: next});
+        });
+    });
+};
 
 
 exports.buryView = function(req, res){

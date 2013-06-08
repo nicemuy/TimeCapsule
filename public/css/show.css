@@ -29,7 +29,7 @@
     margin-left: 90px;
 }
 
-#content{
+.content{
     padding: 0px;
     border: none;
 }
@@ -68,7 +68,7 @@
     top: 40%;
     left: 0;
 }
-img{
+.show-list img{
     vertical-align: baseline;
 }
 img~.progress{
