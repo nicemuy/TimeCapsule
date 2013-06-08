@@ -2,6 +2,7 @@ extends ../layout
 
 block css
     link(href='/css/index.css',rel='stylesheet')
+    link(href='/css/purchase.css',rel='stylesheet')
 
 block js
     script(type='text/javascript',src='/js/purchase.js')
@@ -11,8 +12,9 @@ block js
 
 block row2col1
     .item-list
-        ul.unstyled.inline.text-center
-        ul.unstyled.inline.text-center
+        form#dummy
+            ul.unstyled.inline.text-center
+            ul.unstyled.inline.text-center
         a.arrow-left
             img(src='/img/arrows-left.png',alt='arrows-left')
         a.arrow-right
