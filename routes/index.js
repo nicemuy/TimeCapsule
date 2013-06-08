@@ -107,6 +107,18 @@ exports.purchasePaging = function(req, res){
     });
 };
 
+exports.showPaging = function(req, res){
+    connection.query('SELECT * FROM capsule_type LIMIT ?,?',[(req.params.page-1)*6,6],function(err, results, fields){
+        if(err) throw err;
+        connection.query('SELECT COUNT(*) as total FROM capsule_type',function(err, results2, fields){
+            var pathNum = req.params.page;
+            var previous = pathNum-1?(pathNum-1):'#';
+            var next = pathNum == Math.ceil(results2[0].total/6)?'#':parseInt(pathNum)+1;
+            res.json({results: results ,previous: previous ,next: next});
+        });
+    });
+};
+
 
 exports.buryView = function(req, res){
   //res.render('guest/main', { title: 'GuestMain', layout: 'guestLayout.jade' });
