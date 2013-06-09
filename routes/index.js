@@ -49,7 +49,6 @@ exports.purchase = function(req, res){
 }
 
 exports.purchasePost = function(req, res){
-    console.log('종류가 뭐다냥:'+req.body.kind);
     connection.query('INSERT INTO torder(order_date,refund_flag,method,userid) VALUES(curdate(),false,\'credit\',?)',[req.session.auth.facebook.user.id],function(err, result){
         if(err) throw err;
         var insertId = result.insertId;

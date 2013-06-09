@@ -56,17 +56,17 @@ function showPaging(capsule_id,page){
                 type = '#imageModal';
                 src = '/img/picture.png';
                 name = data.results[index].content_url.substr(8);
-                func = changeImage.bind(func,data.results[index].content_url,data.results[index].content_url.match(/\w/g)[1]);
+                func = changeImage.bind(func,data.results[index].content_url,data.results[index].content_url.substr(8));
             }else if(data.results[index].content_type == 'audio'){
                 type = '#audioModal';
                 src = '/img/audio.png';
                 name = data.results[index].content_url.substr(8);
-                func = changeAudio.bind(func,data.results[index].content_url,data.results[index].content_url.match(/\w/g)[1]);
+                func = changeAudio.bind(func,data.results[index].content_url,data.results[index].content_url.substr(8));
             }else if(data.results[index].content_type == 'video'){
                 type = '#videoModal';
                 src = '/img/movie.png';
                 name = data.results[index].content_url.substr(8);
-                func = changeVideo.bind(func,data.results[index].content_url,data.results[index].content_url.match(/\w/g)[1]);
+                func = changeVideo.bind(func,data.results[index].content_url,data.results[index].content_url.substr(8));
             }
 
             $('<a></a>',{

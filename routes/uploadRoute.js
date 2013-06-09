@@ -19,7 +19,6 @@ timeOut:10000
 });
 var chain = trCon.chain();
 
-
 exports.upload = function(req, res){
     
     chain.on('commit', function(){
