@@ -5,10 +5,9 @@ block css
     link(href='/css/bury.css',rel='stylesheet')
 
 block js
-    script(src='http://code.jquery.com/jquery-1.8.1.js')
     
-    script(type='text/javascript',src='/js/bury.js')
-
+    script(type='text/javascript',src='/js/index.js')
+    
     - var tee = JSON.parse(fbFriends2); 
     
 
@@ -39,6 +38,13 @@ block js
             nameBlock += '<ul>';
             for(var i=0; i<upFiles.files.length; ++i){
                 imageName=upFiles.files.item(i).name;
+                ext = imageName.substring(imageName.lastIndexOf(".")+1,imageName.length);
+                
+                if(!(ext == 'mp3'|| ext == 'mp4' || ext == 'jpg' || ext == 'png')){
+                    alert("첨부 가능한 파일 형식이 아닙니다. \n 첨부가능한 파일 형식은 mp3, mp4, png, jpg로 제한되어 있습니다. ");
+                    $('.file-input-name').remove();
+                    return false;
+                }
                 nameBlock +='<li><a href="#" class="btn btn-large disabled">';
                 nameBlock +=imageName;
                 nameBlock +='</a></li>';
@@ -135,9 +141,9 @@ block row2col1
         li
             img(src='/img/capsule9.png',alt='capsule9')
             div.bury
-                button.btn.btn-large.btn-primary.disabled(type='button', disabled='disabled') 10GB / 5 month
+                button.btn.btn-large.btn-primary.disabled(type='button', disabled='disabled') #{results[0].size}MB / #{results[0].duration}일
         li
-            .alert.alert-info 
+            .alert.alert-info
                 ul
                     #selectFriends
 
@@ -160,7 +166,7 @@ block row2col1
                             button.btn(data-dismiss='modal', aria-hidden='true') Close
                             button.btn.btn-primary(data-dismiss='modal', aria-hidden='true') Save changes    
     
-block row2col2
+block row2col3
     ul
         li
             form(action='/upload', method='post', id='inputForm', enctype='multipart/form-data')
@@ -188,38 +194,8 @@ block row2col1row1col1
         a(href='#')
             img(src='/img/google-logo.png',alt='google')
 
-block row2col3
+block row2col2
     .bought
         ul.unstyled.text-center
-            li
-                img(src='/img/capsule9.png',alt='capsule9')
-                div.bury
-                    a.btn.btn-mini(href='/buryView') 묻기
-            li
-                img(src='/img/capsule10.png',alt='capsule10')
-                div.bury
-                    a.btn.btn-mini(src='/buryView') 묻기
-            li
-                img(src='/img/capsule1.png',alt='capsule1')
-                div.bury
-                    a.btn.btn-mini(src='/buryView') 묻기
-            li
-                img(src='/img/capsule2.png',alt='capsule2')
-                div.bury
-                    a.btn.btn-mini(src='/buryView') 묻기
         div.pagination.pagination-mini.pagination-centered
             ul
-                li
-                    a(href='#') Prev
-                li.active
-                    a(href='#') 1
-                li
-                    a(href='#') 2
-                li
-                    a(href='#') 3
-                li
-                    a(href='#') 4
-                li
-                    a(href='#') 5
-                li
-                    a(href='#') Next

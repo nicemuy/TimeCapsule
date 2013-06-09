@@ -1,0 +1,74 @@
+extends ../layout
+
+block css
+	link(href='/css/index.css',rel='stylesheet')
+	link(href='/css/admin.css',rel='stylesheet')
+
+block js
+	script(type='text/javascript', src='js/bootstrap.file-input.js')
+	script(type='text/javascript',src='/js/AdminIndex.js')
+	script
+		if (window.location.hash == '#_=_')
+			window.location.hash = '';
+
+		function CapsuleCheck(){
+			var CapsuleImg = document.getElementById('CapsuleImg');
+			var CapsuleKind = document.getElementById('cKind');
+			var CapsuleSize = document.getElementById('cSize');
+
+			if(!CapsuleKind.value){
+				alert("캡슐 이름을 입력해주세요.");
+				return false;
+			}
+			if(!CapsuleSize.value){
+				alert("캡슐 용량을 입력해주세요.");
+				return false;
+			}
+			if(CapsuleImg.files.length == 0){
+				alert("파일을 첨부해주세요.");
+				return false;
+			}
+			
+			$('#addForm').submit();
+		}
+block row2col1
+	div 
+		pre 환불 요청 캡슐리스트
+	.item-list
+		ul.unstyled.inline.text-center
+		ul.unstyled.inline.text-center
+		a.arrow-left
+			img(src='/img/arrows-left.png',alt='arrows-left')
+		a.arrow-right
+			img(src='/img/arrows-right.png',alt='arrows-right')
+block row2col1row1col1
+	.item-list.logos
+		a(href='#')
+			img(src='/img/facebook-logo.png',alt='facebook')
+		a(href='#')
+			img(src='/img/twitter-logo.png',alt='twitter')
+		a(href='#')
+			img(src='/img/google-logo.png',alt='google')
+
+block row2col2
+	form(action='/CapsuleTypeUpload', method='post', id='addForm', enctype='multipart/form-data')
+		div#accordion2.accordion
+			div.accordion-group
+				div.accordion-heading
+					a.accordion-toggle( data-toggle='collapse',data-parent='#accordion2', href='#collapse0') 캡슐 종류 추가
+				div#collapse0.accordion-body.collapse.in
+					div.accordion-inner
+						ul
+							li
+								캡슐 이름
+							li
+								input(type='text', name='CapsuleKind', id='cKind',placeholder='ex: superCapsule')
+							li
+								캡슐 용량
+							li
+								input(type='text', name='CapsuleSize', id='cSize',placeholder='ex: 1mb -> 1, 5GB -> 5000')
+							li
+								input(type='file', name='imgs', id='CapsuleImg', title="파일을 선택하세요.")
+							li
+								input.btn(type='button', onclick='CapsuleCheck()', value='묻기');
+

@@ -20,6 +20,7 @@ html
     script(type='text/javascript', src='js/jquery.min.js')
     script(type='text/javascript', src='js/bootstrap.min.js')
     script(type='text/javascript', src='js/bootstrap.file-input.js')
+    script(type='text/javascript', src='js/layout.js')
     block js
     body
     block content
@@ -64,10 +65,14 @@ html
                         div.span3
                             block row2col1
                         div.span6
-                             block row2col2
+                             block row2col3
                     div.row
                         div.span9
                             block row2col1row1col1
                 div.span3
                     //div.vertical-line
-                    block row2col3
+                    block row2col2
+                      .bought
+                          ul.unstyled.text-center
+                          div.pagination.pagination-mini.pagination-centered
+                              ul

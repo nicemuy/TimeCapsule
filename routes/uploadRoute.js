@@ -45,10 +45,11 @@ exports.upload = function(req, res){
 
     chain.query('UPDATE capsule SET capsule_title = ? , bury_flag = true WHERE CAPSULE_ID=?', [req.body.CapsuleTitle, parseInt(req.body.cId)], function(err,results,fields){
         if(err) throw err;
-    })
-    chain.query('UPDATE capsule SET START_DATE = CURDATE() WHERE CAPSULE_ID=?', [(parseInt(req.body.cId))], function(err,results,fields){
+    }).query('UPDATE capsule SET START_DATE = CURDATE() WHERE CAPSULE_ID=?', [(parseInt(req.body.cId))], function(err,results,fields){
         if(err) throw err;
-    })
+    }).query('INSERT INTO user (USERID, CAPSULE_ID) VALUES (?,?)',[req.session.auth.facebook.user.id, parseInt(req.body.cId)], function(err,results3,fields){
+        if(err) throw err;       
+    });
 
     if(req.body.title != null ||req.body.title != undefined){
         //2개이상오면 배열. 구분해서 Text INsert
@@ -111,7 +112,7 @@ exports.upload = function(req, res){
 
     chain.query('select capsule_id from capsule',function(err,results5,fields){
         if(err) throw err;
-            res.render('bury/show', { title: 'Show'
+            res.render('index', { title: 'Show'
                     ,images: util.inspect(images)
             });
     });
@@ -144,19 +145,19 @@ function renameImg(req,image,callbock){
     fs.rename(tmp_path, target_path, function(err){
         if(err) throw err;
             if(image.type.indexOf('image') > -1){
-                chain.query('INSERT INTO contents (CAPSULE_ID, content_type, content_url) VALUES (?,"image",?)',[parseInt(req.body.cId),target_path], function(err,results4,fields){
+                chain.query('INSERT INTO contents (CAPSULE_ID, content_type, content_url) VALUES (?,"image",?)',[parseInt(req.body.cId),'/upload/'+image.name], function(err,results4,fields){
                     console.log('imgbody: '+ image.name);
                     if(err) throw err;
                         
                 });
 
             }else if(image.type.indexOf('video') > -1){
-                chain.query('INSERT INTO contents (CAPSULE_ID, content_type, content_url) VALUES (?,"video",?)',[parseInt(req.body.cId), target_path], function(err,results4,fields){
+                chain.query('INSERT INTO contents (CAPSULE_ID, content_type, content_url) VALUES (?,"video",?)',[parseInt(req.body.cId), '/upload/'+image.name], function(err,results4,fields){
                     console.log('mediabody : '+ image.name);
                     if(err) throw err;
                 });
             }else if(image.type.indexOf('audio') > -1){
-                chain.query('INSERT INTO contents (CAPSULE_ID, content_type, content_url) VALUES (?,"audio",?)',[parseInt(req.body.cId), target_path], function(err,results4,fields){
+                chain.query('INSERT INTO contents (CAPSULE_ID, content_type, content_url) VALUES (?,"audio",?)',[parseInt(req.body.cId), '/upload/'+image.name], function(err,results4,fields){
                     console.log('etcbody : '+ image.name);
                     if(err) throw err;
                 });
@@ -170,3 +171,39 @@ function renameImg(req,image,callbock){
     });
 }
 
+exports.cTypeUpload = function(req,res){
+    var images = [];
+    var isImage = false;
+
+    chain.on('commit', function(){
+      console.log('number commit');
+    }).on('rollback', function(err){
+      console.log(err);
+    });
+
+    var image = req.files.imgs;
+    var kb = image.size / 1024 | 0;
+    images.push({name: image.name, size: kb, isImage: isImage});
+    renameImgForCapsuleType(req,res,image);
+}
+
+function renameImgForCapsuleType(req,res,image){
+    console.log(image.type);
+    var tmp_path = image.path;
+    var target_path = './public/img/' + image.name;
+    console.log('->> tmp_path: ' + tmp_path );
+    console.log('->> target_path: ' + target_path ); 
+    
+    fs.rename(tmp_path, target_path, function(err){
+        if(err) throw err;
+        console.log('->> req.body.CapsuleKind: ' + req.body.CapsuleKind );
+        console.log('->> req.body.CapsuleSize: ' + req.body.CapsuleSize );
+        console.log('->> image.name: ' + image.name );
+        chain.query('INSERT INTO capsule_type (kind,size,img) values (?,?,?)', [req.body.CapsuleKind, req.body.CapsuleSize, image.name], function(err,results,fields){
+            if(err) throw err;
+            console.log('->> cType upload done');
+            res.render('admin', {title: 'Admin Page'});
+        })
+        
+    });
+}

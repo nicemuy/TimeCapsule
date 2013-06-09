@@ -8,6 +8,7 @@ var url = require("url");
 var https = require('https');
 var util = require('util');
 var fs = require('fs');
+var twilio = require('twilio');
 var transaction =  require('node-mysql-transaction');
 
 var trCon = transaction({
@@ -167,12 +168,79 @@ exports.buryView = function(req, res){
     });
 
     res1.on('end', function(){
-      res.render('bury', { title: 'Express', fbFriends: JSON.parse(fullData),fbFriends2: fullData, capsule_id :queryData.capsule_id });
+      connection.query('select size, duration from capsule_type NATURAL JOIN capsule where capsule_id=?',[queryData.capsule_id],function(err, result){
+        console.log(util.inspect(result)+'whit the hell');
+        res.render('bury', { title: 'Express', results:result, fbFriends: JSON.parse(fullData),fbFriends2: fullData, capsule_id :queryData.capsule_id });
+      });
     });
     
   });
 };
 
 exports.admin = function(req,res){
+  res.render('admin', {title: 'Admin Page'});
+}
+
+exports.refundPaging = function(req, res){
+    connection.query('SELECT * FROM capsule_type NATURAL JOIN capsule Natural JOIN torder WHERE bury_flag = true and refund_flag = true LIMIT ?,?',[(req.params.page-1)*8,8],function(err, results, fields){
+        if(err) throw err;
+        connection.query('SELECT COUNT(*) as total FROM capsule NATURAL JOIN torder WHERE bury_flag = true and refund_flag = true',function(err, results2, fields){
+            var pathNum = req.params.page;
+            var previous = pathNum-1?(pathNum-1):'#';
+            var next = pathNum == Math.ceil(results2[0].total/8)?'#':parseInt(pathNum)+1;
+            res.json({results: results ,previous: previous ,next: next});
+        });
+    });
+};
+
+
+exports.refund = function(req,res){
+    var queryData = url.parse(req.url, true).query;
+    console.log(queryData.capsule_id +"<------------------ForReFundCapsule_id");
+    connection.query('update torder a  set a.refund_flag = false where a.order_id = (select order_id from capsule where capsule_id=?)',[(queryData.capsule_id)],function(err, results, fields){
+        if(err) throw err;
+        res.render('admin', {title: 'Admin Page'});
+    });
+}
+
+exports.sendSMS = function(req,res){
+// Create a new REST API client to make authenticated requests against the
+// twilio back end
+var client = new twilio.RestClient('AC9b69cfb44753501a6391a12248328b22', '002fc1ac5a329cdf47a2928fc8377329');
+ 
+// Pass in parameters to the REST API using an object literal notation. The
+// REST client will handle authentication and response serialzation for you.
+var text = '';
+    text += '-Time Travler-\n';
+    text += req.session.auth.facebook.user.name;
+    text += '님의 타입캡슐 기간이 만료되었습니다.';
+    text += '어서 가서 개봉해주세요!!';
+client.sms.messages.create({
+    to:'+821025429381',
+    from:'+16123459604',
+    body:text
+}, function(error, message) {
+    
+    // The HTTP request to Twilio will run asynchronously.  This callback
+    // function will be called when a response is received from Twilio
+    
+    // The "error" variable will contain error information, if any.
+    // If the request was successful, this value will be "falsy"
+    if (!error) {
+        
+        // The second argument to the callback will contain the information
+        // sent back by Twilio for the request.  In this case, it is the
+        // information about the text messsage you just sent:
+        console.log('Success! The SID for this SMS message is:');
+        console.log(message.sid);
+ 
+        console.log('Message sent on:');
+        console.log(message.dateCreated);
+    }
+    else {
+        console.log('Oops! There was an error.');
+    }
+});
+console.log(text);
   res.render('admin', {title: 'Admin Page'});
 }
