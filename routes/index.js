@@ -48,6 +48,7 @@ exports.purchase = function(req, res){
 }
 
 exports.purchasePost = function(req, res){
+    console.log('종류가 뭐다냥:'+req.body.kind);
     connection.query('INSERT INTO torder(order_date,refund_flag,method,userid) VALUES(curdate(),false,\'credit\',?)',[req.session.auth.facebook.user.id],function(err, result){
         if(err) throw err;
         var insertId = result.insertId;
@@ -109,6 +110,7 @@ exports.orderPaging = function(req, res){
             var currPageBlock = Math.ceil(pathNum/pagingNum);
             var previous = (currPageBlock-1)*pagingNum;
             var maxPageBlock = Math.ceil(Math.ceil(results2[0].total/contentNum)/pagingNum);
+            maxPageBlock = maxPageBlock?maxPageBlock:1;
             var next = currPageBlock == maxPageBlock?0:currPageBlock*pagingNum+1;
             var endPage = currPageBlock == maxPageBlock?Math.ceil(results2[0].total/contentNum)-previous:next;
             res.json({results: results ,previous: previous ,next: next ,endPage: endPage});

@@ -46,20 +46,23 @@ function purchasePaging(page){
                 class:'btn btn-mini btn-primary',
                 value:index,
                 text:'구매',
-                click:function(){
-                    var tForm = $('<form></form>').attr('action','/purchase').attr('method','post');
-                    tForm.append($('#day'+this.value).clone());
-                    tForm.append($('#count'+this.value).clone());
-                    tForm.append($('<input/>',{
-                        type:'text',
-                        value: data.results[index].kind,
-                        name:'kind'
-                    }));
-                    $('#dummy').submit(function(){
-                        tForm.submit();
-                        return false;
-                    });
-                }
+                click:(function(){
+                    var idx = index;
+                    return function(){
+                        var tForm = $('<form></form>').attr('action','/purchase').attr('method','post');
+                        tForm.append($('#day'+this.value).clone());
+                        tForm.append($('#count'+this.value).clone());
+                        tForm.append($('<input/>',{
+                            type:'text',
+                            value: data.results[idx].kind,
+                            name:'kind'
+                        }));
+                        $('#dummy').submit(function(){
+                            tForm.submit();
+                            return false;
+                        });
+                    };
+                })()
             })).append($('<button></button>',{
                 class:'btn btn-mini btn-success',
                 value:index,

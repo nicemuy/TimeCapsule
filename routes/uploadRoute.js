@@ -135,7 +135,7 @@ function checkType(image){
 function renameImg(req,image,callbock){
     console.log(image.type);
     var tmp_path = image.path;
-    var target_path = '/upload/' + image.name;
+    var target_path = './public/upload/' + image.name;
     console.log('->> tmp_path: ' + tmp_path );
     console.log('->> target_path: ' + target_path ); 
     //var ext = image.name.substring(image.name.lastIndexOf('.')+1,image.name.length);
