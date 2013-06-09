@@ -91,13 +91,16 @@ app.get('/users', user.list);
 app.all('/minigame', requireLogin);
 app.get('/minigame', routes.minigame);
 app.get('/indexPaging/:page', routes.indexPaging);
+app.get('/refundPaging/:page', routes.refundPaging);
 app.get('/purchasePaging/:page', routes.purchasePaging);
 app.get('/orderPaging/:page', routes.orderPaging);
 app.get('/success/:c_id', routes.success);
 app.all('/buryView', requireLogin);
 app.get('/buryView', routes.buryView);
 app.post('/upload', uploadRoute.upload);
+app.post('/CapsuleTypeUpload', uploadRoute.cTypeUpload);
 app.get('/admin', routes.admin);
+app.get('/refund', routes.refund);
 
 var server = http.createServer(app);
 
