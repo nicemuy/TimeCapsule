@@ -49,7 +49,7 @@ exports.upload = function(req, res){
     chain.query('UPDATE capsule SET START_DATE = CURDATE() WHERE CAPSULE_ID=?', [(parseInt(req.body.cId))], function(err,results,fields){
         if(err) throw err;
     })
-    
+
     if(req.body.title != null ||req.body.title != undefined){
         //2개이상오면 배열. 구분해서 Text INsert
         if(Array.isArray(req.body.title)){
