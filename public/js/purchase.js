@@ -63,7 +63,9 @@ function purchasePaging(page){
                         });
                     };
                 })()
-            })).append($('<button></button>',{
+            })).appendTo(buryItem);
+            /*
+                .append($('<button></button>',{
                 class:'btn btn-mini btn-success',
                 value:index,
                 text:'담기',
@@ -81,7 +83,7 @@ function purchasePaging(page){
                         return false;
                     });
                 }
-            })).appendTo(buryItem);
+            })).appendTo(buryItem);*/
 
             $('<div></div>',{
                 id:'title'+index,

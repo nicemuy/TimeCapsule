@@ -49,7 +49,6 @@ exports.purchase = function(req, res){
 }
 
 exports.purchasePost = function(req, res){
-    console.log('종류가 뭐다냥:'+req.body.kind);
     connection.query('INSERT INTO torder(order_date,refund_flag,method,userid) VALUES(curdate(),false,\'credit\',?)',[req.session.auth.facebook.user.id],function(err, result){
         if(err) throw err;
         var insertId = result.insertId;
@@ -132,14 +131,22 @@ exports.purchasePaging = function(req, res){
 };
 
 exports.showPaging = function(req, res){
-    connection.query('SELECT * FROM contents WHERE capsule_id = ? LIMIT ?,?',[req.params.capsule_id,(req.params.page-1)*8,8],function(err, results, fields){
+    connection.query('SELECT * FROM user WHERE capsule_id = ? and userid = ?',[req.params.capsule_id,req.session.auth.facebook.user.id],function(err, results, fields){
         if(err) throw err;
-        connection.query('SELECT COUNT(*) as total FROM contents WHERE capsule_id = ?',[req.params.capsule_id],function(err, results2, fields){
-            var pathNum = req.params.page;
-            var previous = pathNum-1?(pathNum-1):'#';
-            var next = pathNum == Math.ceil(results2[0].total/8)?'#':parseInt(pathNum)+1;
-            res.json({results: results ,previous: previous ,next: next});
-        });
+        if(results[0] != undefined){
+            connection.query('SELECT * FROM contents WHERE capsule_id = ? LIMIT ?,?',[req.params.capsule_id,(req.params.page-1)*8,8],function(err, results, fields){
+                if(err) throw err;
+                connection.query('SELECT COUNT(*) as total FROM contents WHERE capsule_id = ?',[req.params.capsule_id],function(err, results2, fields){
+                    if(err) throw err;
+                    var pathNum = req.params.page;
+                    var previous = pathNum-1?(pathNum-1):'#';
+                    var next = pathNum == Math.ceil(results2[0].total/8)?'#':parseInt(pathNum)+1;
+                    res.json({results: results ,previous: previous ,next: next});
+                });
+            });
+        }else{
+            res.send(404,'Not Found');
+        }
     });
 };
 
@@ -269,6 +276,7 @@ client.sms.messages.create({
     else {
         console.log('Oops! There was an error.');
     }
+
     console.log(text);
     res.render('admin', {title: 'Admin Page'});
 

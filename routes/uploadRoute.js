@@ -13,7 +13,6 @@ var connection = mysql.createConnection({
     database:'TimeDB'
 });
 
-
 exports.upload = function(req, res){
 
 
