@@ -7,7 +7,7 @@ block css
 block js
     
     script(type='text/javascript',src='/js/index.js')
-    
+
     - var tee = JSON.parse(fbFriends2); 
     
 
@@ -20,7 +20,7 @@ block js
             var CapsuleTitle ='';
             CapsuleTitle += '<div class="accordion-group">';
             CapsuleTitle += '   <div class="accordion-heading">';
-            CapsuleTitle += '       캡슐이름 : <input type="text" name="CapsuleTitle" />';
+            CapsuleTitle += '       캡슐이름 : <input type="text" name="CapsuleTitle" id="capsuleMainTitle"/>';
             CapsuleTitle += '   </div>';
             CapsuleTitle += '</div>';
 
@@ -60,11 +60,11 @@ block js
             temp += '<div class="accordion-group">';
             temp += '   <div class="accordion-heading">';
             temp += '       <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse' + txtCnt + '">' + txtCnt+ '번글 </a>';
-            temp += '       제목 : <input type="text" name="title" />';
+            temp += '       제목 : <input type="text" name="title" id="textTitle"/>';
             temp += '   </div>';
             temp += '   <div id="collapse' + txtCnt + '" class="accordion-body collapse in">';
             temp += '       <div class="accordion-inner">';
-            temp += '           <textarea class="textBox" name="contents" rows="4" cols="50"></textarea>';
+            temp += '           <textarea class="textBox" name="contents" id="textContents" rows="4" cols="50"></textarea>';
             temp += '       </div>';
             temp += '   </div>';
             temp += '</div>';
@@ -84,9 +84,16 @@ block js
 
         function fileCheck(){
             var upFiles = document.getElementById('upFiles');
+            var capsuleMainTitle = document.getElementById('capsuleMainTitle');
+            var textContents = document.getElementById('textContents');
+            var textTitle = document.getElementById('textTitle');
+            var userContact = document.getElementById('userContact');
+            
             var friendid = '';
             var friendName = '';
             var cIdInput = ''; // capsule_id를 폼으로 보내기 위함 
+            var userContactDiv = '';//사용자 번호
+
             for(var k = 0; k<setFriends.length; k++){
                 friendid = $("<input>").attr({"type":"hidden","name":"friendsId"}).val(setFriends[k].id);
                 friendName = $("<input>").attr({"type":"hidden","name":"friendsName"}).val(setFriends[k].name);
@@ -95,12 +102,37 @@ block js
             }
             cIdInput = $("<input>").attr({"type":"hidden", "name":"cId"}).val(cId);
             $('#friends').append(cIdInput);
+
             
+            userContactDiv = $("<input>").attr({"type":"hidden","name":"userContact"}).val(userContact.value);
+
+            $('#contacts').append(userContactDiv);
+            
+            
+            if(capsuleMainTitle.value == ''){
+                alert("캡슐 제목을 입력해 주세요 .");
+                return false;
+            }
+
+            if(textTitle.value == ''){
+                alert("글 제목을 입력해 주세요 .");
+                return false;
+            }
+
+            if(textContents.value == ''){
+                alert("글 내용을 입력해주세요.");
+                return false;
+            }
+
+            if(userContact.value == ''){
+                alert("연락처를 입력해주세요.");
+                return false;
+            }
+
             if(upFiles.files.length == 0){
                 alert("파일을 첨부해주세요.");
                 return false;
             }
-
             $('#inputForm').submit();
         }
 
@@ -149,6 +181,18 @@ block row2col1
 
         li
             a.btn(href='#friendModal',role='button', data-toggle='modal')친구추가
+            div#accordion2.accordion
+            div.accordion-group
+                div.accordion-heading
+                    a.accordion-toggle( data-toggle='collapse',data-parent='#accordion2', href='#collapse99') 연락처
+                div#collapse99.accordion-body.collapse.in
+                    div.accordion-inner
+                        ul
+                            li
+                                input.span2#userContact(type='text', id='userContact')
+                            li
+                                button.btn.btn-danger.disabled
+                                    알람문자 받을 연락처
             #friendModal.modal.hide.fade(tabindex='-1', role='dialog', aria-labelledby='friendModalLabel', aria-hidden='true')
                 .modal-header
                         button.close(type='button',data-dismiss='modal', aria-hidden='true') x
@@ -179,9 +223,12 @@ block row2col3
                             button.btn(type='button', onclick='addContents()') 글 추가 
                         li
                             input(type='file', name='imgs', id='upFiles', title="파일을 선택하세요.", multiple="")
-                            input.btn(type='button', onclick='fileCheck()', value='묻기');
+                        li
+                            input.btn.btn-primary(type='button', onclick='fileCheck()', value='묻기');
+                            
                         li 
                             #friends
+                            #contacts
                     #fileNameSpace
                                  
 

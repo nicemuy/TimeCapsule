@@ -44,7 +44,7 @@ function refundPaging(page){
                 })).appendTo(buryItem);
                 $('<a></a>',{
                     class:'btn btn-danger btn-small',
-                    href:'/refund?capsule_id='+data.results[index].capsule_id,
+                    href:'/refund?capsule_id='+data.results[index].capsule_id+'&contact='+data.results[index].contacts,
                     text:'환불'
                 }).appendTo(buryItem);
                 
@@ -58,7 +58,7 @@ function refundPaging(page){
                 })).appendTo(buryItem);
                 $('<a></a>',{
                     class:'btn btn-danger btn-small',
-                    href:'/refund?capsule_id='+data.results[index].capsule_id,
+                    href:'/refund?capsule_id='+data.results[index].capsule_id+'&contact='+data.results[index].contacts,
                     text:'환불'
                 }).appendTo(buryItem);
             }
