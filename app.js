@@ -92,6 +92,7 @@ app.all('/minigame', requireLogin);
 app.get('/minigame', routes.minigame);
 app.get('/indexPaging/:page', routes.indexPaging);
 app.get('/refundPaging/:page', routes.refundPaging);
+app.get('/showPaging/:capsule_id/:page', routes.showPaging);
 app.get('/purchasePaging/:page', routes.purchasePaging);
 app.get('/orderPaging/:page', routes.orderPaging);
 app.get('/success/:c_id', routes.success);
