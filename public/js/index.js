@@ -12,12 +12,13 @@ function indexPaging(page){
     $.get('/indexPaging/'+page,function(data){
         for(index in data.results){
             var buryItem = $('<li></li>');
-            $('<img/>',{
-                src:'/img/'+data.results[index].img,
-                alt:'캡슐',
-                class:'pop'
-            }).appendTo(buryItem);
+            console.log(data.results[index].refund_flag);
             if(!data.results[index].refund_flag){
+                $('<img/>',{
+                    src:'/img/'+data.results[index].img,
+                    alt:'캡슐',
+                    class:'pop'
+                }).appendTo(buryItem);
                 $('<div></div>',{
                     id:'title'+index,
                     style:'display:none',
@@ -67,10 +68,15 @@ function indexPaging(page){
                     })).appendTo(buryItem);
                     $('<a></a>',{
                         class:'btn btn-inverse btn-small',
-                        href:'/refund?order_id='+data.results[index].order_id,
+                        href:'/reqfund?order_id='+data.results[index].order_id,
                         text:'환불'
                     }).appendTo(buryItem);
                 }
+            }else{
+                $('<img/>',{
+                    src:'/img/refund_capsule.png',
+                    alt:'캡슐'
+                }).appendTo(buryItem);
             }
             if(index<4){
                 $($('.item-list ul')[0]).append(buryItem);

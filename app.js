@@ -102,6 +102,8 @@ app.post('/upload', uploadRoute.upload);
 app.post('/CapsuleTypeUpload', uploadRoute.cTypeUpload);
 app.get('/admin', routes.admin);
 app.get('/refund', routes.refund);
+app.all('/reqfund', requireLogin);
+app.get('/reqfund', routes.reqfund);
 
 var server = http.createServer(app);
 
