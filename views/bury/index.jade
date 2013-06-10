@@ -14,7 +14,7 @@ block js
     script
         var contents = '';
         var cId = #{capsule_id};
-        
+        var totalFileSize = '';
         var txtCnt=0;
         $(function(){
             var CapsuleTitle ='';
@@ -37,10 +37,11 @@ block js
 
             nameBlock += '<ul>';
             for(var i=0; i<upFiles.files.length; ++i){
+                totalFileSize += upFiles.files.item(i).size;
                 imageName=upFiles.files.item(i).name;
                 ext = imageName.substring(imageName.lastIndexOf(".")+1,imageName.length);
                 
-                if(!(ext == 'mp3'|| ext == 'mp4' || ext == 'jpg' || ext == 'png')){
+                if(!(ext.toLowerCase() == 'mp3'|| ext.toLowerCase() == 'mp4' || ext.toLowerCase() == 'jpg' || ext.toLowerCase() == 'png' )){
                     alert("첨부 가능한 파일 형식이 아닙니다. \n 첨부가능한 파일 형식은 mp3, mp4, png, jpg로 제한되어 있습니다. ");
                     $('.file-input-name').remove();
                     return false;
@@ -51,6 +52,13 @@ block js
             }
             nameBlock += '</ul>';
 
+            if(totalFileSize/(1024*1024) > #{results[0].size} ){
+                alert("업로드하신 용량은 " + totalFileSize/(1024*1024)+"MB입니다.\n허용 용량은 "+ #{results[0].size}+"MB를 넘을 수 없습니다.");
+                $('.file-input-name').remove();
+                return false;
+
+            }
+            totalFileSize = 0;
             $('#fileNameSpace').append(nameBlock);
         })
         }); // onload
@@ -158,26 +166,34 @@ block js
         };
 
         function addFriends(friendId,friendName){
+            var structure ='';
+
+            structure += '<div class="alert alert-info">';
+            structure += '  <ul>';
+            
             $('div[id="selectFriends"]').empty();
             setFriends.push(
                 {id:friendId, name:friendName}
             );
             for(var i=0; i<setFriends.length; i++){
-                $('div[id="selectFriends"]').append('<li> <img src="https://graph.facebook.com/'+setFriends[i].id+'/picture?type=square"/><a href = "#" onclick="addFriends('+jsonT.data[i].id+',\''+jsonT.data[i].name+'\')">'+ setFriends[i].name+'</a></li>');           
+                structure += '<li> <img src="https://graph.facebook.com/'+setFriends[i].id+'/picture?type=square"/><a href = "#" onclick="addFriends('+jsonT.data[i].id+',\''+jsonT.data[i].name+'\')">'+ setFriends[i].name+'</a></li>';              
             }
+
+            structure += '  </ul>';
+            structure += '</div>';
+
+            $('div[id="selectFriends"]').append(structure);
         }              
 
         
 block row2col1
     ul
         li
-            img(src='/img/capsule9.png',alt='capsule9')
+            img(src='/img/#{results[0].img}',alt='capsule9')
             div.bury
                 button.btn.btn-large.btn-primary.disabled(type='button', disabled='disabled') #{results[0].size}MB / #{results[0].duration}일
         li
-            .alert.alert-info
-                ul
-                    #selectFriends
+            #selectFriends
 
         li
             a.btn(href='#friendModal',role='button', data-toggle='modal')친구추가
@@ -234,9 +250,9 @@ block row2col3
 
 block row2col1row1col1
     .item-list.logos
-        a(href='#')
+        a(href='https://www.facebook.com/travler.time.3')
             img(src='/img/facebook-logo.png',alt='facebook')
-        a(href='#')
+        a(href='https://twitter.com/TimeTravler1')
             img(src='/img/twitter-logo.png',alt='twitter')
         a(href='#')
             img(src='/img/google-logo.png',alt='google')

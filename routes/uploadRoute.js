@@ -4,6 +4,9 @@ var https = require('https');
 var util = require('util');
 var fs = require('fs');
 var transaction =  require('node-mysql-transaction');
+var schedule = require('node-schedule');
+var twilio = require('twilio');
+
 
 var connection = mysql.createConnection({
     host:'54.214.246.103',
@@ -13,9 +16,8 @@ var connection = mysql.createConnection({
     database:'TimeDB'
 });
 
+
 exports.upload = function(req, res){
-
-
     //console.log('req.body'+util.inspect(req.body));
 
     //console.log('req.body.friends : '+ req.body.friendsId);
@@ -25,7 +27,7 @@ exports.upload = function(req, res){
     var images = [];
     var isImage = false;
 
-    connection.query('UPDATE capsule SET capsule_title = ? , bury_flag = true, contacts = ? ,START_DATE = CURDATE() WHERE CAPSULE_ID=?', [req.body.CapsuleTitle, req.body.userContact, parseInt(req.body.cId)], function(err,results,fields){
+    connection.query('UPDATE capsule SET capsule_title = ? , bury_flag = true, contacts = ?, START_DATE = CURDATE() WHERE CAPSULE_ID=?', [req.body.CapsuleTitle, parseInt(req.body.userContact), parseInt(req.body.cId)], function(err,results,fields){
         if(err) throw err;
     });
 
@@ -53,13 +55,13 @@ exports.upload = function(req, res){
         //2개이상오면 배열. 구분해서 친구 INsert
         if(Array.isArray(req.body.friendsId)){
             for(var i=0; i<req.body.friendsId.length; i++){
-                connection.query('INSERT INTO user (USERID, CAPSULE_ID) VALUES (?,?)',[req.body.friendsId[i], req.body.cId], function(err,results3,fields){
+                connection.query('INSERT INTO user (USERID, CAPSULE_ID) VALUES (?,?)',[req.body.friendsId[i], parseInt(req.body.cId)], function(err,results3,fields){
                     
                     if(err) throw err;
                 });
             };
         }else{
-            connection.query('INSERT INTO user (USERID, CAPSULE_ID) VALUES (?,?)',[req.body.friendsId, req.body.cId], function(err,results3,fields){
+            connection.query('INSERT INTO user (USERID, CAPSULE_ID) VALUES (?,?)',[req.body.friendsId, parseInt(req.body.cId)], function(err,results3,fields){
                 
                 if(err) throw err;
             });
@@ -91,15 +93,61 @@ exports.upload = function(req, res){
     //console.log('->> render');
 
 
-    connection.query('select capsule_id from capsule',function(err,results5,fields){
+    connection.query('select start_date, duration, contacts from capsule where capsule_id = ?',[parseInt(req.body.cId)], function(err,results5,fields){
         if(err) throw err;
-            res.render('index', { title: 'Show'
-                    ,images: util.inspect(images)
-            });
+
+        var date2 = new Date(results5[0].start_date);
+        date2.setHours(0);
+        date2.setMinutes(0);
+        var duration = results5[0].duration*24*60*60*1000;
+        var openDate = new Date(date2.getTime() + duration);
+        openDate.setHours(0);
+        openDate.setMinutes(0);
+        var openDateTostring = openDate.toString("yyyyMMdd");
+        
+
+
+        console.log(openDate +  " : openDateTostring");
+        console.log(openDateTostring +  " : openDateTostring");
+        
+
+        var curDate = new Date();
+        var tempDate = new Date (curDate.getTime() + 1*60*1000);
+
+        var j = schedule.scheduleJob(openDate, function(){
+            var client = new twilio.RestClient('AC9b69cfb44753501a6391a12248328b22', '002fc1ac5a329cdf47a2928fc8377329');
+             
+            // Pass in parameters to the REST API using an object literal notation. The
+            // REST client will handle authentication and response serialzation for you.
+            var text = '';
+                text += '-Time Travler-\n';
+                text += req.session.auth.facebook.user.name;
+                text += '님의 타입캡슐 기간이 만료되었습니다.';
+                text += '어서 가서 개봉해주세요!!';
+            client.sms.messages.create({
+                to:'+82'+results5[0].contacts,
+                from:'+16123459604',
+                body:text
+            }, function(error, message) {
+                if (!error) {
+                    console.log('Success! The SID for this SMS message is:');
+                    console.log(message.sid);
+             
+                    console.log('Message sent on:');
+                    console.log(message.dateCreated);
+                }
+                else {
+                    console.log('Oops! There was an error.');
+                }
+
+                console.log(text);
+                res.render('admin', {title: 'Admin Page'});
+
+                });
+        });
+        res.redirect("/");
     });
-    
-};
- 
+}; 
 function checkType(image){
     var isImage = false;
     //console.log('->> image.type.indexOf : ' + image.type.indexOf('image'));
@@ -174,7 +222,7 @@ function renameImgForCapsuleType(req,res,image){
         //console.log('->> req.body.CapsuleKind: ' + req.body.CapsuleKind );
         //console.log('->> req.body.CapsuleSize: ' + req.body.CapsuleSize );
         //console.log('->> image.name: ' + image.name );
-        connection.query('INSERT INTO capsule_type (kind,size,img) values (?,?,?)', [req.body.CapsuleKind, req.body.CapsuleSize, image.name], function(err,results,fields){
+        connection.query('INSERT INTO capsule_type (kind,size,img) values (?,?,?)', [req.body.CapsuleKind, parseInt(req.body.CapsuleSize), image.name], function(err,results,fields){
             if(err) throw err;
             //console.log('->> cType upload done');
             res.render('admin', {title: 'Admin Page'});

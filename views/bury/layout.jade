@@ -38,11 +38,19 @@ html
                                     a.brand(href='#') TimeTravler
                                     div.nav-collapse.collapse.navbar-responsive-collapse
                                         ul.nav.pull-right
-                                            li.active
-                                                a(href='#') 내 캡슐
+                                            if menu == 'my'
+                                                li.active
+                                                    a(href='/') 내 캡슐
+                                            else
+                                                li
+                                                    a(href='/') 내 캡슐
                                             li.divider-vertical
-                                            li
-                                                a(href='#') 캡슐 사기
+                                            if menu == 'purchase'
+                                                li.active
+                                                    a(href='/purchase') 캡슐 사기
+                                            else
+                                                li
+                                                    a(href='/purchase') 캡슐 사기
                                             li.divider-vertical
                                             li.dropdown
                                                 a.dropdown-toggle(data-toggle='dropdown',href='#',style='padding: 5px 15px')

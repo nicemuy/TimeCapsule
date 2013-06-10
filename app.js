@@ -51,7 +51,6 @@ app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(express.favicon());
 app.use(express.logger('dev'));
-app.use(express.limit('20mb'));
 app.use(express.bodyParser({uploadDir: __dirname + '/tmp'}));
 app.use(express.methodOverride());
 app.use(express.cookieParser('your secret here'));
@@ -98,9 +97,13 @@ app.get('/orderPaging/:page', routes.orderPaging);
 app.get('/success/:c_id', routes.success);
 app.all('/buryView', requireLogin);
 app.get('/buryView', routes.buryView);
+app.all('/upload', requireLogin);
 app.post('/upload', uploadRoute.upload);
+app.all('/CapsuleTypeUpload', requireLogin);
 app.post('/CapsuleTypeUpload', uploadRoute.cTypeUpload);
+app.all('/admin', requireLogin);
 app.get('/admin', routes.admin);
+app.all('/refund', requireLogin);
 app.get('/refund', routes.refund);
 
 var server = http.createServer(app);
@@ -143,4 +146,12 @@ io.sockets.on('connection', function (socket) {
     Minigame.clear(data,socket);
     map.init();
   });
+
+  socket.on('upload', function (data) {
+    console.log('in : ' + data.fileSize);
+    
+    app.use(express.bodyParser({uploadDir: __dirname + '/tmp'}));
+    console.log('out');
+  });
+  
 });

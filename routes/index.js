@@ -10,6 +10,7 @@ var util = require('util');
 var fs = require('fs');
 var twilio = require('twilio');
 var transaction =  require('node-mysql-transaction');
+var schedule = require('node-schedule');
 
 var trCon = transaction({
     connection: [mysql.createConnection,{
@@ -167,7 +168,7 @@ exports.buryView = function(req, res){
     });
 
     res1.on('end', function(){
-      connection.query('select size, duration from capsule_type NATURAL JOIN capsule where capsule_id=?',[queryData.capsule_id],function(err, result){
+      connection.query('select size, duration, img from capsule_type NATURAL JOIN capsule where capsule_id=?',[queryData.capsule_id],function(err, result){
         console.log(util.inspect(result)+'whit the hell');
         res.render('bury', { title: 'Express', results:result, fbFriends: JSON.parse(fullData),fbFriends2: fullData, capsule_id :queryData.capsule_id });
       });
@@ -197,45 +198,47 @@ exports.refund = function(req,res){
     var queryData = url.parse(req.url, true).query;
     console.log(queryData.capsule_id +"<------------------ForReFundCapsule_id");
     console.log(queryData.contact +"<------------------contacts");
-    connection.query('update torder a  set a.refund_flag = false where a.order_id = (select order_id from capsule where capsule_id=?)',[(queryData.capsule_id)],function(err, results, fields){
+    connection.query('update torder a  set a.refund_flag = false where a.order_id = (select order_id from capsule where capsule_id=?)',[parseInt(queryData.capsule_id)],function(err, results, fields){
         if(err) throw err;
-        var client = new twilio.RestClient('AC9b69cfb44753501a6391a12248328b22', '002fc1ac5a329cdf47a2928fc8377329');
-         
-        // Pass in parameters to the REST API using an object literal notation. The
-        // REST client will handle authentication and response serialzation for you.
-        var text = '';
-            text += '-Time Travler-\n';
-            text += req.session.auth.facebook.user.name;
-            text += '님의 타입캡슐이 환불 되었습니다.';
-        client.sms.messages.create({
-            to:'+82'+queryData.contact,
-            from:'+16123459604',
-            body:text
-        }, function(error, message) {
-            
-            // The HTTP request to Twilio will run asynchronously.  This callback
-            // function will be called when a response is received from Twilio
-            
-            // The "error" variable will contain error information, if any.
-            // If the request was successful, this value will be "falsy"
-            if (!error) {
-                
-                // The second argument to the callback will contain the information
-                // sent back by Twilio for the request.  In this case, it is the
-                // information about the text messsage you just sent:
-                console.log('Success! The SID for this SMS message is:');
-                console.log(message.sid);
-         
-                console.log('Message sent on:');
-                console.log(message.dateCreated);
-            }
-            else {
-                console.log('Oops! There was an error.');
-            }
-            console.log(text);
-            res.render('admin', {title: 'Admin Page'});
-        });
-        
+        connection.query('delete from contents where capsule_id=?',[parseInt(queryData.capsule_id)],function(err, results2, fields){    
+            if(err) throw err;
+            connection.query('update capsule set bury_flag = false where capsule_id =?',[parseInt(queryData.capsule_id)],function(err, results3, fields){    
+                var client = new twilio.RestClient('AC9b69cfb44753501a6391a12248328b22', '002fc1ac5a329cdf47a2928fc8377329');
+                 
+                // Pass in parameters to the REST API using an object literal notation. The
+                // REST client will handle authentication and response serialzation for you.
+                var text = '';
+                    text += '-Time Travler-\n';
+                    text += req.session.auth.facebook.user.name;
+                    text += '님의 타입캡슐이 환불 되었습니다.';
+                client.sms.messages.create({
+                    to:'+82'+queryData.contact,
+                    from:'+16123459604',
+                    body:text
+                }, function(error, message) {
+                    
+                    // The HTTP request to Twilio will run asynchronously.  This callback
+                    // function will be called when a response is received from Twilio
+                    
+                    // The "error" variable will contain error information, if any.
+                    // If the request was successful, this value will be "falsy"
+                    if (!error) {
+                        // The second argument to the callback will contain the information
+                        // sent back by Twilio for the request.  In this case, it is the
+                        // information about the text messsage you just sent:
+                        console.log('Success! The SID for this SMS message is:');
+                        console.log(message.sid);
+                        console.log('Message sent on:');
+                        console.log(message.dateCreated);
+                    }
+                    else {
+                        console.log('Oops! There was an error.');
+                    }
+                    console.log(text);
+                    res.redirect('admin');
+                });
+            });
+        }); 
     });
 }
 
