@@ -93,7 +93,7 @@ exports.indexPaging = function(req, res){
     connection.query('SELECT * FROM capsule_type NATURAL JOIN capsule NATURAL JOIN user NATURAL JOIN torder WHERE userid = ? and bury_flag = true LIMIT ?,?',[req.session.auth.facebook.user.id,(req.params.page-1)*8,8],function(err, results, fields){
         if(err) throw err;
         if(results[0] == undefined){
-            connection.query('SELECT * FROM capsule_type NATURAL JOIN capsule NATURAL JOIN user NATURAL JOIN torder WHERE userid = ? and bury_flag = true LIMIT ?,?',[req.session.auth.facebook.user.id,(req.params.page-1)*8,8],function(err, results, fields){
+            connection.query('SELECT * FROM capsule_type NATURAL JOIN capsule NATURAL JOIN user WHERE userid = ? and bury_flag = true LIMIT ?,?',[req.session.auth.facebook.user.id,(req.params.page-1)*8,8],function(err, results, fields){
                 if(err) throw err;
                 connection.query('SELECT COUNT(*) as total FROM capsule NATURAL JOIN user WHERE userid = ? and bury_flag = true',[req.session.auth.facebook.user.id],function(err, results2, fields){
                     var pathNum = req.params.page;
