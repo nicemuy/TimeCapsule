@@ -191,7 +191,7 @@
     });
 
     socket.on('clear_react', function (data) {
-      var url = "http://localhost:3000/#";    
+      var url = "http://www.alsquare.com:3000/";    
       $(location).attr('href',url);
     });
 

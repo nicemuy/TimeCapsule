@@ -148,12 +148,5 @@ io.sockets.on('connection', function (socket) {
     Minigame.clear(data,socket);
     map.init();
   });
-
-  socket.on('upload', function (data) {
-    console.log('in : ' + data.fileSize);
-    
-    app.use(express.bodyParser({uploadDir: __dirname + '/tmp'}));
-    console.log('out');
-  });
   
 });
