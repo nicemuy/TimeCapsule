@@ -90,7 +90,7 @@ exports.success = function(req, res){
 };
 
 exports.indexPaging = function(req, res){
-    connection.query('SELECT * FROM capsule_type NATURAL JOIN capsule NATURAL JOIN user WHERE userid = ? and bury_flag = true LIMIT ?,?',[req.session.auth.facebook.user.id,(req.params.page-1)*8,8],function(err, results, fields){
+    connection.query('SELECT * FROM capsule_type NATURAL JOIN capsule NATURAL JOIN user NATURAL JOIN torder WHERE userid = ? and bury_flag = true LIMIT ?,?',[req.session.auth.facebook.user.id,(req.params.page-1)*8,8],function(err, results, fields){
         if(err) throw err;
         connection.query('SELECT COUNT(*) as total FROM capsule NATURAL JOIN user WHERE userid = ? and bury_flag = true',[req.session.auth.facebook.user.id],function(err, results2, fields){
             var pathNum = req.params.page;
@@ -98,6 +98,13 @@ exports.indexPaging = function(req, res){
             var next = pathNum == Math.ceil(results2[0].total/8)?'#':parseInt(pathNum)+1;
             res.json({results: results ,previous: previous ,next: next});
         });
+    });
+};
+
+exports.reqfund = function(req, res){
+    connection.query('UPDATE torder SET refund_flag=true WHERE order_id = ?',[req.query.order_id],function(err, results, fields){
+        if(err) throw err;
+        res.send('<html><head></head><body><script>alert("환불 요청되었습니다.");location.href="/";</script></body></html>');
     });
 };
 

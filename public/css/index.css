@@ -43,6 +43,6 @@
 img~.progress{
     margin-top: 20px;
 }
-div[data-original-title='100%']{
+div[data-original-title]{
     margin-bottom: 10px;
 }

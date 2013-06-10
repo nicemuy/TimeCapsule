@@ -105,6 +105,8 @@ app.all('/admin', requireLogin);
 app.get('/admin', routes.admin);
 app.all('/refund', requireLogin);
 app.get('/refund', routes.refund);
+app.all('/reqfund', requireLogin);
+app.get('/reqfund', routes.reqfund);
 
 var server = http.createServer(app);
 
