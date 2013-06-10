@@ -102,13 +102,14 @@ exports.indexPaging = function(req, res){
                     res.json({results: results ,previous: previous ,next: next});
                 });
             });
+        }else{
+            connection.query('SELECT COUNT(*) as total FROM capsule NATURAL JOIN user WHERE userid = ? and bury_flag = true',[req.session.auth.facebook.user.id],function(err, results2, fields){
+                var pathNum = req.params.page;
+                var previous = pathNum-1?(pathNum-1):'#';
+                var next = pathNum == Math.ceil(results2[0].total/8)?'#':parseInt(pathNum)+1;
+                res.json({results: results ,previous: previous ,next: next});
+            });
         }
-        connection.query('SELECT COUNT(*) as total FROM capsule NATURAL JOIN user WHERE userid = ? and bury_flag = true',[req.session.auth.facebook.user.id],function(err, results2, fields){
-            var pathNum = req.params.page;
-            var previous = pathNum-1?(pathNum-1):'#';
-            var next = pathNum == Math.ceil(results2[0].total/8)?'#':parseInt(pathNum)+1;
-            res.json({results: results ,previous: previous ,next: next});
-        });
     });
 };
 

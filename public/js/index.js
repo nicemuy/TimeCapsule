@@ -66,11 +66,13 @@ function indexPaging(page){
                         style:'width:'+perc+'%',
                         class:'bar'
                     })).appendTo(buryItem);
-                    $('<a></a>',{
-                        class:'btn btn-inverse btn-small',
-                        href:'/reqfund?order_id='+data.results[index].order_id,
-                        text:'환불'
-                    }).appendTo(buryItem);
+                    if(data.results[index].refund_flag != undefined){
+                        $('<a></a>',{
+                            class:'btn btn-inverse btn-small',
+                            href:'/reqfund?order_id='+data.results[index].order_id,
+                            text:'환불'
+                        }).appendTo(buryItem);
+                    }
                 }
             }else{
                 $('<img/>',{
