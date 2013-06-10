@@ -51,7 +51,7 @@ function showPaging(capsule_id,page){
                 type = '#textModal';
                 src = '/img/text.png';
                 name = data.results[index].text_title;
-                func = changeText.bind(func,data.results[index].content_url,data.results[index].text_title);
+                func = changeText.bind(func,data.results[index].text_contents,data.results[index].text_title);
             }else if(data.results[index].content_type == 'image'){
                 type = '#imageModal';
                 src = '/img/picture.png';
@@ -81,8 +81,10 @@ function showPaging(capsule_id,page){
                 alt: 'icon'
             }))).appendTo(showItem);
 
-            $('<div class="text"></div>',{
-                text:name
+            $('<div></div>',{
+                text:name,
+                class:'text',
+                style: 'white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100px;'
             }).appendTo(showItem);
 
 
