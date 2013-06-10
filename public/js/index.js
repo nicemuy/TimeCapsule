@@ -66,7 +66,7 @@ function indexPaging(page){
                         style:'width:'+perc+'%',
                         class:'bar'
                     })).appendTo(buryItem);
-                    if(data.results[index].refund_flag != undefined){
+                    if(data.results[index].ouserid == data.results[index].uuserid){
                         $('<a></a>',{
                             class:'btn btn-inverse btn-small',
                             href:'/reqfund?order_id='+data.results[index].order_id,

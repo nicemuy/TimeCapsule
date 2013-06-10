@@ -90,28 +90,16 @@ exports.success = function(req, res){
 };
 
 exports.indexPaging = function(req, res){
-    connection.query('SELECT * FROM capsule_type NATURAL JOIN capsule NATURAL JOIN user NATURAL JOIN torder WHERE userid = ? and bury_flag = true LIMIT ?,?',[req.session.auth.facebook.user.id,(req.params.page-1)*8,8],function(err, results, fields){
+    connection.query('SELECT order_id,capsule_id,kind,size,img,start_date,duration,open_flag,bury_flag,capsule_title,contacts,user.userid uuserid,torder.userid ouserid,order_date,refund_flag,method,cost FROM capsule_type NATURAL JOIN capsule NATURAL JOIN user JOIN torder USING(order_id) WHERE user.userid = ? and bury_flag = true LIMIT ?,?',[req.session.auth.facebook.user.id,(req.params.page-1)*8,8],function(err, results, fields){
         if(err) throw err;
-        if(results[0] == undefined){
-            connection.query('SELECT * FROM capsule_type NATURAL JOIN capsule NATURAL JOIN user WHERE userid = ? and bury_flag = true LIMIT ?,?',[req.session.auth.facebook.user.id,(req.params.page-1)*8,8],function(err, results, fields){
-                if(err) throw err;
-                connection.query('SELECT COUNT(*) as total FROM capsule NATURAL JOIN user WHERE userid = ? and bury_flag = true',[req.session.auth.facebook.user.id],function(err, results2, fields){
-                    var pathNum = req.params.page;
-                    var previous = pathNum-1?(pathNum-1):'#';
-                    var next = pathNum == Math.ceil(results2[0].total/8)?'#':parseInt(pathNum)+1;
-                    res.json({results: results ,previous: previous ,next: next});
-                });
-            });
-        }else{
-            connection.query('SELECT COUNT(*) as total FROM capsule NATURAL JOIN user WHERE userid = ? and bury_flag = true',[req.session.auth.facebook.user.id],function(err, results2, fields){
-                var pathNum = req.params.page;
-                var previous = pathNum-1?(pathNum-1):'#';
-                var next = pathNum == Math.ceil(results2[0].total/8)?'#':parseInt(pathNum)+1;
-                res.json({results: results ,previous: previous ,next: next});
-            });
-        }
+        connection.query('SELECT COUNT(*) as total FROM capsule NATURAL JOIN user WHERE userid = ? and bury_flag = true',[req.session.auth.facebook.user.id],function(err, results2, fields){
+            var pathNum = req.params.page;
+            var previous = pathNum-1?(pathNum-1):'#';
+            var next = pathNum == Math.ceil(results2[0].total/8)?'#':parseInt(pathNum)+1;
+            res.json({results: results ,previous: previous ,next: next});
+        });
     });
-};
+}
 
 exports.reqfund = function(req, res){
     connection.query('UPDATE torder SET refund_flag=true WHERE order_id = ?',[req.query.order_id],function(err, results, fields){
