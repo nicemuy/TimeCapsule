@@ -7,7 +7,7 @@
 	var splayerList = new Array();
 
 
-	var socket = io.connect('http://localhost:3000/');
+	var socket = io.connect('http://alsquare.com:3000/');
 
   
 	sPlayer.init(name);
