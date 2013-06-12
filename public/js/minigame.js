@@ -13,6 +13,7 @@
 	sPlayer.init(name);
 	sPlayer.set_cid(c_id);
   sMap.init();
+  sMap.set_cid(c_id);
 	splayerList.push(sPlayer);
 
 	window.addEventListener('load',eventWindowLoaded,false);

@@ -6,6 +6,7 @@ function Map(){
 		this.arr = new Array(200);
 		this.titleSheet = new Image();
 		this.titleSheet.src="/img/tilesheet.png";
+		this.c_id;
 		
 		this.box = new Image();
 		this.spark = new Image();
@@ -15,6 +16,10 @@ function Map(){
 		this.spark.src="/img/sparks.png";
 		this.shadow.src="/img/shadow.png";
 
+	},
+	
+	this.set_cid = function(c_id){
+		this.c_id = c_id;
 	},
 
 	this.get_Arr = function(){
