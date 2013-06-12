@@ -46,6 +46,13 @@ function Map(){
 				if(this.arr[count] == 4){
 					context.drawImage(this.box,0,0,48,48,100*j+25,100*i+25,50,50);
 					context.drawImage(this.spark,48*(temp%6),0,32,48,100*j+25,100*i+25,50,50);
+					$.get('/success/'+this.c_id,function(data){
+
+								 	socket.emit('clear', {gameover : true});
+								 	var url = "http://www.alsquare.com:3000/";    
+									$(location).attr('href',url);
+								 });
+
 				}else if(this.arr[count] == -1){
 					context.drawImage(this.shadow,0,0,48,48,100*j+25,100*i+25,50,50);
 				}

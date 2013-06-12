@@ -268,7 +268,7 @@ function Player(){
 								 $.get('/success/'+this.c_id,function(data){
 
 								 	socket.emit('clear', {gameover : true});
-								 	var url = "http://localhost:3000/#";    
+								 	var url = "http://www.alsquare.com:3000/";    
 									$(location).attr('href',url);
 								 });
 
@@ -322,9 +322,10 @@ function Player(){
 								$.get('/success/'+this.c_id,function(data){
 
 								 	socket.emit('clear', {gameover : true});
-								 	var url = "http://localhost:3000/#";    
+								 	var url = "http://www.alsquare.com:3000/";    
 									$(location).attr('href',url);
 								 });
+
 
 							}else{
 								socket.emit('last_hit', {p_name: this.name, count : count });
@@ -375,9 +376,10 @@ function Player(){
 								$.get('/success/'+this.c_id,function(data){
 
 								 	socket.emit('clear', {gameover : true});
-								 	var url = "http://localhost:3000/#";    
+								 	var url = "http://www.alsquare.com:3000/";    
 									$(location).attr('href',url);
 								 });
+
 
 							}else{
 								socket.emit('last_hit', {p_name: this.name, count : count });
@@ -432,9 +434,10 @@ function Player(){
 								$.get('/success/'+this.c_id,function(data){
 
 								 	socket.emit('clear', {gameover : true});
-								 	var url = "http://localhost:3000/#";    
+								 	var url = "http://www.alsquare.com:3000/";    
 									$(location).attr('href',url);
 								 });
+
 
 							}else{
 								socket.emit('last_hit', {p_name: this.name, count : count });
