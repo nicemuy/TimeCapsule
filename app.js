@@ -118,7 +118,9 @@ io = io.listen(server);
 
 io.sockets.on('connection', function (socket) {
   
-  socket.emit('init', { map : map.get_Arr()});
+  socket.emit('init', { 
+    map : map.get_Arr()
+  });
 
   socket.on('hello', function (data) {
     Minigame.hello(data,socket);

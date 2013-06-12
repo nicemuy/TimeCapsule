@@ -135,7 +135,6 @@
 
     socket.on('init', function (data) {
       sMap.set_Arr(data.map);
-      socket.emit('hello', { object : test });
     });
 
 
