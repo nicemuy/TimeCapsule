@@ -2,6 +2,11 @@
 /**
  * Module dependencies.
  */
+process.on('uncaughtException', function (err) {
+    console.log('Caught exception: ' + err);
+    // err.stack 으로 나중에 바꿔야할듯
+});
+
 
 function requireLogin(req, res, next) {
     if (req.session.auth != undefined?req.session.auth.loggedIn:false) {
